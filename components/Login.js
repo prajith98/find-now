@@ -5,8 +5,6 @@ import { FontAwesome5, Entypo } from '@expo/vector-icons';
 import * as Google from 'expo-google-app-auth';
 import * as Facebook from 'expo-facebook';
 import LinkedInModal, { LinkedInToken } from 'react-native-linkedin'
-import { CLIENT_ID, CLIENT_SECRET } from 'react-native-dotenv'
-import { Alert } from 'react-native';
 // import Constants from "expo-constants";
 export default class Login extends Component {
 

@@ -16,7 +16,6 @@
     "expo-camera": "~8.2.0",
     "expo-device": "~2.1.0",
     "expo-facebook": "~8.1.0",
-    "expo-file-system": "~8.1.0",
     "expo-google-app-auth": "^8.1.0",
     "expo-image-picker": "~8.1.0",
     "expo-sharing": "~8.1.0",

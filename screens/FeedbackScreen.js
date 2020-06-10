@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Dimensions, TextInput, Image, Alert } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Dimensions, TextInput, Image, Alert, Keyboard } from 'react-native';
 import { Feather, MaterialIcons } from '@expo/vector-icons'
 import normalize from 'react-native-normalize';
 import { Divider } from 'react-native-elements';
@@ -71,33 +71,35 @@ export default class Screen extends React.Component {
         this.setState({ feedback: val })
     }
     onSubmit = async () => {
+        Keyboard.dismiss()
+        if (this.state.category == "") {
+            Alert.alert("", "Kindly select a feedback category")
+            return 0
+        }
         var oldFeedback = {}
-        console.log("feedback :" + this.state.feedback)
         const firestoreRef = db.collection('feedback').doc(this.state.category);
         await firestoreRef.get()
             .then((doc) => {
                 if (doc.exists) {
                     oldFeedback = doc.data()
-                    console.log(doc.data())
                 }
                 else {
                     console.log("creating new doc")
                     db.collection('feedback').doc(this.state.category)
                         .set({
-                            1: this.state.feedback
+                            0: this.state.feedback
                         })
                     return 1;
                 }
             })
         var count = Object.keys(oldFeedback).length;
-        console.log("count : " + count)
         oldFeedback[count] = this.state.feedback
         db.collection('feedback').doc(this.state.category).update(oldFeedback);
         Alert.alert("", "Thank you for your feedback!")
         this.reset();
     }
-    reset = () => {
-        this.setState({
+    reset = async () => {
+        await this.setState({
             d: false,
             n: false,
             s: false,
@@ -173,6 +175,7 @@ export default class Screen extends React.Component {
                                 </View>
                                 <Text style={{ fontSize: normalize(16), paddingBottom: normalize(10), width: normalize(300) }}>Please leave your feedback below.</Text>
                                 <TextInput
+                                    value={this.state.feedback}
                                     multiline={true}
                                     numberOfLines={6}
                                     onChangeText={this.feedbackInputHandler}

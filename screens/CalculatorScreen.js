@@ -77,10 +77,10 @@ export default class CalculatorScreen extends React.Component {
     }
     _shareResuslts = async () => {
         try {
-            let result = await captureRef(this._container, {
-                format: 'png',
-            });
-            Sharing.shareAsync(result)
+            await Share.share({
+                message:
+                    "Loan : " + paisa.formatWithSymbol(this.state.Loan * 100,0) + "\nRate : " + this.state.Rate + "%\nTenure : " + this.state.Tenure + " Months\nEMI: " + paisa.formatWithSymbol(this.state.EMI * 100,0),
+            })
         }
         catch (snapshotError) {
             console.error(snapshotError);
@@ -595,9 +595,9 @@ export default class CalculatorScreen extends React.Component {
                                                     </RadioForm>
                                                 </View>
                                             </View>
-                                            <View style={{ width: '95%', alignItems: "center", justifyContent: "center", height: normalize(220), right: normalize(5),top:normalize(5) }}>
+                                            <View style={{ width: '95%', alignItems: "center", justifyContent: "center", height: normalize(220), right: normalize(5), top: normalize(5) }}>
                                                 <View style={{ width: '100%', height: "24%" }}>
-                                                    <Text style={{ width: "15%", left: normalize(57), bottom: normalize(12), color: "grey" }} >{this.state.Loan != "" ? "Loan" : ""}</Text>
+                                                    <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.Loan != "" ? "Loan" : ""}</Text>
                                                     <View style={{ alignItems: "center", bottom: normalize(25) }}>
                                                         <View style={styles.combo2}>
                                                             <MaterialCommunityIcons name="sack" size={20} color="#FFA62F" style={{ top: "4%" }} />
@@ -607,7 +607,7 @@ export default class CalculatorScreen extends React.Component {
                                                     <Text style={{ fontSize: normalize(11), textAlign: "right", bottom: "60%", left: "13%", paddingTop: 3, width: "81%" }}>{this.state.loanInWords}</Text>
                                                 </View>
                                                 <View style={{ width: '100%', height: "24%" }}>
-                                                    <Text style={{ width: "15%", left: normalize(57), bottom: normalize(12), color: "grey" }} >{this.state.Rate != "" ? "Rate" : ""}</Text>
+                                                    <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.Rate != "" ? "Rate" : ""}</Text>
                                                     <View style={{ alignItems: "center", bottom: normalize(25) }}>
                                                         <View style={styles.combo2}>
                                                             <Feather name="percent" size={20} color="red" style={{ top: "4%" }} />
@@ -617,7 +617,7 @@ export default class CalculatorScreen extends React.Component {
                                                     </View>
                                                 </View>
                                                 <View style={{ width: '100%', height: "24%" }}>
-                                                    <Text style={{ width: "15%", left: normalize(57), bottom: normalize(12), color: "grey" }} >{this.state.Tenure != "" ? "Tenure" : ""}</Text>
+                                                    <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.Tenure != "" ? "Tenure" : ""}</Text>
                                                     <View style={{ alignItems: "center", bottom: normalize(25) }}>
                                                         <View style={styles.combo2}>
                                                             <Feather name="clock" size={20} color="red" style={{ top: "4%" }} />
@@ -634,7 +634,7 @@ export default class CalculatorScreen extends React.Component {
                                                     </View>
                                                 </View>
                                                 <View style={{ width: '100%', height: "24%" }}>
-                                                    <Text style={{ width: "15%", left: normalize(57), bottom: normalize(12), color: "grey" }} >{this.state.EMI != "" ? "EMI" : ""}</Text>
+                                                    <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.EMI != "" ? "EMI" : ""}</Text>
                                                     <View style={{ alignItems: "center", bottom: normalize(25) }}>
                                                         <View style={styles.combo2}>
                                                             <FontAwesome5 name="coins" size={20} color="#FFA62F" style={{ top: "4%" }} />

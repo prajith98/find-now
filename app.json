@@ -1,20 +1,16 @@
 {
   "expo": {
-    "name": "find-now",
-    "slug": "find-now",
+    "name": "Find Now",
+    "slug": "switch-to-save",
     "platforms": [
       "ios",
       "android",
       "web"
     ],
+    "facebookScheme":"fb669104680580891",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "icon": "./assets/Logo.png",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -22,7 +18,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.switchtosave.findnow",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.switchtosave.findnow",
+      "versionCode": 1
     }
   }
 }

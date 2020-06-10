@@ -260,17 +260,20 @@ export default class Profile extends React.Component {
                         <ClassicHeader
                             centerComponent={
                                 <View style={{ justifyContent: "center", alignItems: "center", top: "4%", width: "70%" }}>
-                                    {this.state.photoAvailable ? (<TouchableOpacity onPress={() => this.RBSheet.open()} ><Image source={{ uri: this.state.photoUrl }} style={styles.profile} /></TouchableOpacity>)
-                                        : (<TouchableOpacity onPress={() => this.RBSheet.open()}><Image source={require("../assets/profile-pic.png")} style={styles.profile} /></TouchableOpacity>)
+                                    {this.state.photoAvailable ? (<Image source={{ uri: this.state.photoUrl }} style={styles.profile} />)
+                                        : (<Image source={require("../assets/profile-pic.png")} style={styles.profile} />)
                                     }
                                     <Text style={{ fontSize: normalize(30), color: '#f8f3eb', fontWeight: "bold", width: "100%", textAlign: "center" }}>{this.state.name}</Text>
+                                    <TouchableOpacity onPress={() => this.RBSheet.open()} style={{ left: normalize(45), bottom: normalize(85), width: normalize(45), height: normalize(45), borderRadius: normalize(50), justifyContent: "center", alignItems: "center", backgroundColor: "#15D29D" }}>
+                                        <Image source={require("../assets/photograph.png")} style={{ resizeMode: "contain", width: normalize(25), height: normalize(25) }} />
+                                    </TouchableOpacity>
                                 </View>}
 
                             backgroundColor="#f40552"
                             height={normalize(240)}
                             leftComponent={
                                 <TouchableOpacity
-                                    style={{ alignItems: "flex-start", top: "-40%", left: "5%" }}
+                                    style={{ alignItems: "flex-start", top: "-50%", left: "5%" }}
                                     onPress={this.props.navigation.openDrawer}
                                 >
                                     <Feather name="menu" size={30} color="white" />
@@ -282,7 +285,7 @@ export default class Profile extends React.Component {
                             ref={ref => {
                                 this.RBSheet = ref;
                             }}
-                            height={175}
+                            height={normalize(175)}
                             openDuration={250}
                             customStyles={{
                                 container: {

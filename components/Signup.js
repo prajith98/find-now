@@ -129,9 +129,9 @@ export default class Signup extends Component {
             <TouchableOpacity onPress={this.handleSignUp}>
               <Text style={styles.btnStyle}>SIGN UP</Text>
             </TouchableOpacity>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: normalize(12), textAlign: "center", top: normalize(10) }}>By signing up you agree to our </Text>
-              <Text onPress={() => this.setState({ t_cVisible: true })} style={{ fontSize: normalize(12), textAlign: "center", top: normalize(10), textDecorationLine: "underline", fontWeight: "bold" }}>Terms {'&'} Conditions</Text>
+            <View style={{ flexDirection: "row" , justifyContent:"center"}}>
+              <Text style={{ fontSize: normalize(12), top: normalize(10) }}>  By signing up you agree to our </Text>
+              <Text onPress={() => this.setState({ t_cVisible: true })} style={{ fontSize: normalize(12), top: normalize(10), textDecorationLine: "underline", fontWeight: "bold" , width:"40%"}}>Terms {'&'} Conditions</Text>
             </View>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')} style={{ marginTop: normalize(25) }}>
               <Text style={styles.loginText}>

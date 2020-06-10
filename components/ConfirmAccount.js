@@ -26,7 +26,6 @@ export default class ConfirmAccount extends Component {
         this.setState({
             mobile: enteredText
         })
-        console.log(enteredText)
     }
 
     done = () => {
@@ -44,7 +43,6 @@ export default class ConfirmAccount extends Component {
             });
         })
             .then(() => {
-                console.log('From CA:' + this.state.mobile)
                 this.props.navigation.navigate('OtpVerification', { mobile: Number(this.state.mobile) })
 
             })
