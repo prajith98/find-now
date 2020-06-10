@@ -4,6 +4,7 @@ import Firebase, { db } from '../database/firebase';
 import { RFValue } from "react-native-responsive-fontsize";
 const { windowWidth, windowHeight } = Dimensions.get('window');
 import OTPTextView from 'react-native-otp-textinput';
+import normalize from 'react-native-normalize';
 
 export default class OtpVerification extends Component {
     constructor(props) {
@@ -92,15 +93,15 @@ export default class OtpVerification extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: "#f8f3eb" }}>
                 <View style={{ alignItems: "center", marginTop: '10%' }}>
-                    <Image source={require('./images/logo1.png')} style={{ width: 330, height: 60, }}></Image>
+                    <Image source={require('./images/logo1.png')} style={{ width: normalize(330), height: normalize(60) }}></Image>
                 </View>
-                <View style={{ alignItems: "center", height: 280, top: "5%" }}>
+                <View style={{ alignItems: "center", height: normalize(280), top: "5%" }}>
                     <View style={styles.container}>
                         <KeyboardAvoidingView keyboardShouldPersistTaps='always' style={{ height: '100%', justifyContent: "space-evenly" }}>
                             <Text style={{ fontFamily: "Roboto", textAlign: "center", fontSize: RFValue(16, windowHeight) }}>Enter OTP sent to your mobile number</Text>
                             <OTPTextView
                                 ref={(e) => (this.input1 = e)}
-                                textInputStyle={{ fontSize: RFValue(16, windowHeight) }}
+                                textInputStyle={{ fontSize: normalize(16) }}
                                 handleTextChange={(text) => this.setState({ otp: text })}
                                 inputCount={4}
                                 keyboardType="numeric"

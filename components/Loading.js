@@ -2,6 +2,7 @@ import React from 'react';
 import { View, SafeAreaView, Image, ActivityIndicator } from 'react-native';
 import { YellowBox } from 'react-native';
 import Firebase, { db } from '../database/firebase';
+import normalize from 'react-native-normalize';
 YellowBox.ignoreWarnings(['Warning: ...']);
 console.disableYellowBox = true;
 export default class Loading extends React.Component {
@@ -39,7 +40,7 @@ export default class Loading extends React.Component {
             <View style={{ flex: 1, backgroundColor: "#f8f3eb" }}>
                 <SafeAreaView style={{ flex: 1, marginTop: 35 }}>
                     <View style={{ alignItems: "center", marginTop: '10%' }}>
-                        <Image source={require('./images/logo1.png')} style={{ width: 330, height: 60, }}></Image>
+                        <Image source={require('./images/logo1.png')} style={{ width: normalize(330), height: normalize(60) }}></Image>
                     </View>
                     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
                         <ActivityIndicator size="large" color="#f40552" />

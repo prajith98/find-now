@@ -106,5 +106,5 @@ const styles = StyleSheet.create({
     row: { flexDirection: 'row',borderBottomWidth:0.5,borderBottomColor:"white" },
     head: { height: 40, backgroundColor: '#e43f5a' },
     text: { margin: 10, textAlign: "left" },
-    text1: { textAlign: 'left', fontFamily: 'Roboto', color: 'white', fontSize: normalize(16), paddingLeft: normalize(10) },
+    text1: { textAlign: 'left', fontFamily: 'Roboto', color: 'white', fontSize: normalize(15), paddingLeft: normalize(10) },
 })

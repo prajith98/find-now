@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import normalize from 'react-native-normalize';
 
 const { width: winWidth, height: winHeight } = Dimensions.get('window');
 
@@ -24,34 +25,22 @@ export default StyleSheet.create({
         bottom: 0,
     },
     captureBtn: {
-        width: 60,
-        height: 60,
+        width: normalize(60),
+        height: normalize(60),
         borderWidth: 2,
-        borderRadius: 60,
+        borderRadius: normalize(60),
         borderColor: "#FFFFFF",
     },
     captureBtnActive: {
-        width: 80,
-        height: 80,
+        width: normalize(80),
+        height: normalize(80),
     },
     captureBtnInternal: {
-        width: 76,
-        height: 76,
+        width: normalize(76),
+        height: normalize(76),
         borderWidth: 2,
-        borderRadius: 76,
+        borderRadius: normalize(76),
         backgroundColor: "red",
         borderColor: "transparent",
     },
-    galleryContainer: { 
-        bottom: 100 
-    },
-    galleryImageContainer: { 
-        width: 75, 
-        height: 75, 
-        marginRight: 5 
-    },
-    galleryImage: { 
-        width: 75, 
-        height: 75 
-    }
 });

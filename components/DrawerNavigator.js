@@ -134,14 +134,14 @@ const DrawerNavigator = createDrawerNavigator({
 },
     {
         contentComponent: props => <SideBar {...props} name={Firebase.auth().currentUser.displayName} photoUrl={Firebase.auth().currentUser.photoURL} />,
-        drawerWidth: Dimensions.get("window").width * 0.75,
+        drawerWidth: Dimensions.get("window").width * 0.80,
         hideStatusBar: true,
         contentOptions: {
             activeBackgroundColor: "#FDE8E2",
             activeTintColor: "#440733",
             itemContainerStyle: {
-                marginTop: 16,
-                marginHorizontal: 8,
+                marginTop: normalize(16),
+                marginHorizontal: normalize(8),
 
             },
             itemStyle: {
@@ -156,9 +156,9 @@ export default DrawerNavigator;
 const styles = StyleSheet.create({
     label: {
         width: '100%',
-        marginHorizontal: 10,
-        marginTop: 15,
-        fontFamily: "Roboto",   
+        marginHorizontal: normalize(10),
+        marginTop: normalize(15),
+        fontFamily: "Roboto",
         height: '100%',
         padding: 8,
         fontSize: normalize(14)

@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, Linking,
 import { Feather, } from '@expo/vector-icons'
 import { YellowBox } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
+import normalize from 'react-native-normalize';
 YellowBox.ignoreWarnings(['Warning: ...']);
 console.disableYellowBox = true;
 export default class BankScreen extends React.Component {
@@ -72,7 +73,7 @@ export default class BankScreen extends React.Component {
     render() {
         return (
             <View style={styles.container}>
-                <SafeAreaView style={{ flex: 1, marginTop: 35 }}>
+                <SafeAreaView style={{ flex: 1, marginTop: normalize(35) }}>
                     <View style={{ alignItems: "center" }}>
                         <View style={styles.header}>
                             <View style={{ flex: 1, alignItems: "flex-start", justifyContent: "flex-start" }}>
@@ -103,16 +104,16 @@ export default class BankScreen extends React.Component {
                                             <TouchableOpacity style={styles.content} key={index} onPress={() => this.openGps(value.geometry.location.lat, value.geometry.location.lng, value.name)}>
                                                 <View style={{ justifyContent: "center" }}>
                                                     {photoAvailable ?
-                                                        <Image source={{ uri: 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=125&photoreference=' + value.photos[0].photo_reference + '&key=' + this.state.key }} style={{ width: 125, height: 110, borderRadius: 5 }}></Image>
-                                                        : <Image source={require("../assets/bank1.png")} style={{ width: 125, height: 110, borderRadius: 5 }}></Image>
+                                                        <Image source={{ uri: 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=125&photoreference=' + value.photos[0].photo_reference + '&key=' + this.state.key }} style={{ width: normalize(100), height: normalize(100), resizeMode: "cover", borderRadius: 5 }}></Image>
+                                                        : <Image source={require("../assets/bank1.png")} style={{ width: normalize(100), height: normalize(100), resizeMode: "contain", borderRadius: 5 }}></Image>
                                                     }
                                                 </View>
                                                 <View style={{ flex: 1 }}>
                                                     <View>
                                                         <Text style={styles.contentHeader}>{value.name}</Text>
-                                                        <Text style={{ paddingLeft: 10, fontFamily: "Roboto", fontSize: 12, fontWeight: "bold", color: OC == 'Open' ? 'green' : 'red' }}>{OC}</Text>
+                                                        <Text style={{ paddingLeft: 10, fontFamily: "Roboto", fontSize: normalize(12), fontWeight: "bold", color: OC == 'Open' ? 'green' : 'red' }}>{OC}</Text>
                                                         <Text style={styles.contentDescription}>{value.vicinity}</Text>
-                                                        <Text style={{ paddingLeft: 10, fontFamily: "Roboto", fontSize: 12, fontWeight: "bold" }}>{this.state.dist[index]}m</Text>
+                                                        <Text style={{ paddingLeft: 10, fontFamily: "Roboto", fontSize: normalize(12), fontWeight: "bold" }}>{this.state.dist[index]}m</Text>
                                                     </View>
                                                     <View style={{ flex: 1, justifyContent: "flex-end" }}>
                                                         <Text style={{ textAlign: "right", fontWeight: "bold", color: "#e43f5a", justifyContent: "flex-end" }}>Directions</Text>
@@ -147,12 +148,12 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: "row",
         width: "90%",
-        height: 80,
+        height: normalize(50),
         justifyContent: "flex-start",
     },
     headerText: {
         color: "#e43f5a",
-        fontSize: 28,
+        fontSize: normalize(25),
         fontWeight: "bold",
         alignContent: "flex-start",
         fontFamily: "Roboto"

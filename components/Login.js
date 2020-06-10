@@ -5,6 +5,7 @@ import { FontAwesome5, Entypo } from '@expo/vector-icons';
 import * as Google from 'expo-google-app-auth';
 import * as Facebook from 'expo-facebook';
 import LinkedInModal, { LinkedInToken } from 'react-native-linkedin'
+import normalize from 'react-native-normalize';
 // import Constants from "expo-constants";
 export default class Login extends Component {
 
@@ -270,7 +271,7 @@ export default class Login extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: "#f8f3eb" }} >
         <View style={{ alignItems: "center", marginTop: '10%' }}>
-          <Image source={require('./images/logo1.png')} style={{ width: 330, height: 60, }}></Image>
+          <Image source={require('./images/logo1.png')} style={{ width: normalize(330), height: normalize(60) }}></Image>
         </View>
         <View style={styles.container}>
           <KeyboardAvoidingView keyboardShouldPersistTaps='always'>
@@ -317,7 +318,7 @@ export default class Login extends Component {
               <TouchableOpacity>
                 <Entypo name="facebook-with-circle" color="#3b5998" size={45} onPress={this.loginWithFacebook} />
               </TouchableOpacity>
-                {/* <LinkedInModal
+              {/* <LinkedInModal
                   ref={ref => { this.modal = ref; }}
                   renderButton={this.renderLinkedinButton}
                   clientID={CLIENT_ID}
@@ -345,7 +346,7 @@ const styles = StyleSheet.create({
     left: '10%',
     top: "25%",
     bottom: '10%',
-    height: 400,
+    height: normalize(400),
     padding: 25,
     borderColor: '#fff',
     borderWidth: 5,

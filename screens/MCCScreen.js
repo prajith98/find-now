@@ -739,7 +739,7 @@ export default class MCCScreen extends React.Component {
                                                     <View style={styles.combo2}>
                                                         <Feather name="percent" size={20} color="red" style={{ top: "5%" }} />
                                                         <TextInput onTouchStart={() => this.setState({ b: true })} placeholder={this.state.ratePlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.rateInputHandler} value={this.state.Rate} editable={this.state.rateTextInputVisible}></TextInput>
-                                                        <Text style={{ fontSize: normalize(20), right: normalize(35), padding: normalize(10), top: normalize(7) }}>p.a</Text>
+                                                        <Text style={{ fontSize: normalize(18), right: normalize(35), padding: normalize(10), top: normalize(7) }}>p.a</Text>
                                                     </View>
                                                 </View>
                                             </View>
@@ -776,7 +776,7 @@ export default class MCCScreen extends React.Component {
                                         <View style={{ left: "3%", width: "100%", backgroundColor: "#f8f3eb", alignItems: "center", top: normalize(5) }}>
                                             <View style={{ flexDirection: "row", width: "95%" }}>
                                                 <FontAwesome name="calendar" size={20} color="#FFA62F" style={{ paddingRight: normalize(10), top: "2%" }} />
-                                                <TextInput style={{ paddingLeft: normalize(10), width: "100%", right: normalize(10), fontSize: normalize(20) }} placeholder="Moratorium Period : 3 Months" value={"Moratorium Period : " + this.state.mm} />
+                                                <TextInput style={{ paddingLeft: normalize(10), width: "100%", right: normalize(10), fontSize: normalize(18) }} placeholder="Moratorium Period : 3 Months" value={"Moratorium Period : " + this.state.mm} />
                                             </View>
                                             <View style={styles.sliderStyle}>
                                                 <Slider
@@ -829,7 +829,7 @@ export default class MCCScreen extends React.Component {
                                                     <TouchableOpacity onPress={this.toggleInfo}>
                                                         <Entypo name="info-with-circle" size={15} />
                                                     </TouchableOpacity>
-                                                    <Text style={{ textAlign: "center", fontSize: normalize(20), fontWeight: "bold", width: "90%", paddingBottom: normalize(10) }}>Impact : If Moratorium is Opted</Text>
+                                                    <Text style={{ textAlign: "center", fontSize: normalize(18), fontWeight: "bold", width: "90%", paddingBottom: normalize(10) }}>Impact : If Moratorium is Opted</Text>
                                                 </View>
                                                 <Table borderStyle={{ borderWidth: 1, borderColor: "#f8f3eb" }} ref={view => { this._container1 = view; }}>
                                                     <Row data={this.state.tableHead} flexArr={[0.6, 1.4, 1, 1, 1]} style={styles.head} textStyle={styles.tableText} />
@@ -880,7 +880,7 @@ export default class MCCScreen extends React.Component {
                                     {this.state.showSolution ? (
                                         <View >
                                             <View style={styles.tableContainer} >
-                                                <Text style={{ textAlign: "center", fontSize: normalize(20), fontWeight: "bold", paddingLeft: 20, paddingBottom: 10 }}>Increase Your EMI </Text>
+                                                <Text style={{ textAlign: "center", fontSize: normalize(18), fontWeight: "bold", paddingLeft: 20, paddingBottom: 10 }}>Increase Your EMI </Text>
 
                                                 <Table borderStyle={{ borderWidth: 1, borderColor: "#f8f3eb" }} ref={view => { this._container2 = view; }}>
                                                     <Row data={this.state.tableHead2} flexArr={[0.6, 1.4, 1, 1, 1]} style={styles.head} textStyle={styles.tableText} />
@@ -940,16 +940,16 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: "row",
-        width: "90%",
+        width: "95%",
         height: normalize(100),
     },
     headerText: {
         color: "#161924",
-        fontSize: normalize(28),
+        fontSize: normalize(25),
         borderBottomWidth: 2,
         borderColor: "#e43f5a",
         alignContent: "flex-start",
-        fontFamily: "Roboto"
+        fontFamily: "Roboto",
     },
     body: {
         top: normalize(15),
@@ -964,7 +964,7 @@ const styles = StyleSheet.create({
     },
     text: {
         color: "#161924",
-        fontSize: normalize(20),
+        fontSize: normalize(18),
         fontWeight: "500"
     },
     textInput: {
@@ -975,7 +975,7 @@ const styles = StyleSheet.create({
         textAlignVertical: "bottom",
         padding: normalize(10),
         marginBottom: normalize(10),
-        fontSize: normalize(20),
+        fontSize: normalize(18),
     },
     textInput1: {
         color: "black",
@@ -984,7 +984,7 @@ const styles = StyleSheet.create({
         width: '47.5%',
         padding: normalize(10),
         marginBottom: normalize(10),
-        fontSize: normalize(20),
+        fontSize: normalize(18),
     },
     combo2: {
         flexDirection: "row",
@@ -1003,7 +1003,7 @@ const styles = StyleSheet.create({
     },
     textOutput: {
         padding: normalize(30),
-        fontSize: normalize(20)
+        fontSize: normalize(18)
     },
     answer: {
         flexDirection: "column",

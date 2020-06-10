@@ -78,7 +78,7 @@ export default class Signup extends Component {
     return (
       <View style={{ flex: 1, backgroundColor: "#f8f3eb" }}>
         <View style={{ alignItems: "center", marginTop: '10%' }}>
-          <Image source={require('./images/logo1.png')} style={{ width: 330, height: 60, }}></Image>
+          <Image source={require('./images/logo1.png')} style={{ width: normalize(330), height: normalize(60) }}></Image>
         </View>
         <View style={styles.container}>
           <KeyboardAvoidingView keyboardShouldPersistTaps='always'>
@@ -129,9 +129,9 @@ export default class Signup extends Component {
             <TouchableOpacity onPress={this.handleSignUp}>
               <Text style={styles.btnStyle}>SIGN UP</Text>
             </TouchableOpacity>
-            <View style={{ flexDirection: "row" , justifyContent:"center"}}>
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
               <Text style={{ fontSize: normalize(12), top: normalize(10) }}>  By signing up you agree to our </Text>
-              <Text onPress={() => this.setState({ t_cVisible: true })} style={{ fontSize: normalize(12), top: normalize(10), textDecorationLine: "underline", fontWeight: "bold" , width:"40%"}}>Terms {'&'} Conditions</Text>
+              <Text onPress={() => this.setState({ t_cVisible: true })} style={{ fontSize: normalize(12), top: normalize(10), textDecorationLine: "underline", fontWeight: "bold", width: "40%" }}>Terms {'&'} Conditions</Text>
             </View>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')} style={{ marginTop: normalize(25) }}>
               <Text style={styles.loginText}>
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     left: '10%',
     top: "25%",
     bottom: '10%',
-    height: 400,
+    height: normalize(405),
     padding: 25,
     borderColor: '#fff',
     borderWidth: 5,
@@ -209,10 +209,10 @@ const styles = StyleSheet.create({
   visibilityBtn:
   {
     position: 'absolute',
-    right: 3,
-    height: 40,
-    width: 35,
-    padding: 5
+    right: normalize(3),
+    height: normalize(30),
+    width: normalize(30),
+    padding: normalize(5)
   },
 
   btnImage:
@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   btnStyle: {
     backgroundColor: "#f40552",
     textAlign: "center",
-    height: 35,
+    height: normalize(35),
     textAlignVertical: "center",
     color: "white",
     fontFamily: "Roboto",

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, ActivityIndicator, TouchableOpacity, Image, Alert, KeyboardAvoidingView } from 'react-native';
 import Firebase from '../database/firebase';
 import { FontAwesome5, Entypo } from '@expo/vector-icons';
+import normalize from 'react-native-normalize';
 
 export default class ResetPassword extends Component {
 
@@ -79,8 +80,8 @@ const styles = StyleSheet.create({
         left: '10%',
         top: "25%",
         bottom: '10%',
-        height: 350,
-        padding: 25,
+        height: normalize(350),
+        padding: normalize(25),
         borderColor: '#fff',
         borderWidth: 5,
         borderRadius: 15,
@@ -93,15 +94,15 @@ const styles = StyleSheet.create({
     },
     inputStyle: {
         width: '85%',
-        marginBottom: 15,
-        paddingBottom: 15,
+        marginBottom: normalize(15),
+        paddingBottom: normalize(15),
         alignSelf: "center",
         borderColor: "#ccc",
         borderBottomWidth: 1
     },
     loginText: {
         color: 'grey',
-        marginTop: 25,
+        marginTop: normalize(25),
         textAlign: 'center'
     },
     preloader: {

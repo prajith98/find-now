@@ -15,7 +15,7 @@ class CameraScreen extends Component {
             captures: [],
             capturing: null,
             hasCameraPermission: null,
-            cameraType: Camera.Constants.Type.back,
+            cameraType: Camera.Constants.Type.front,
             flashMode: Camera.Constants.FlashMode.off,
         };
     }

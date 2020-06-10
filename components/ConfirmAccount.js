@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, Alert } from 'react-native';
 import Firebase, { db } from '../database/firebase';
 import { FontAwesome5 } from '@expo/vector-icons';
+import normalize from 'react-native-normalize';
 
 export default class ConfirmAccount extends Component {
     constructor() {
@@ -32,6 +33,13 @@ export default class ConfirmAccount extends Component {
         this.setState({
             isLoading: true,
         });
+        if (this.state.mobile == "") {
+            Alert.alert("", "Enter your mobile number")
+            this.setState({
+                isLoading: false,
+            });
+            return 0;
+        }
         const updateDBRef = db.collection('users').doc(Firebase.auth().currentUser.uid);
         updateDBRef.update({
             mobile: this.state.mobile,
@@ -64,11 +72,11 @@ export default class ConfirmAccount extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: "#f8f3eb" }}>
                 <View style={{ alignItems: "center", marginTop: '10%' }}>
-                    <Image source={require('./images/logo1.png')} style={{ width: 330, height: 60, }}></Image>
+                    <Image source={require('./images/logo1.png')} style={{ width: normalize(330), height: normalize(60), }}></Image>
                 </View>
                 <View style={styles.container}>
                     <KeyboardAvoidingView keyboardShouldPersistTaps='always'>
-                        <Text style={{ fontWeight: "bold", fontFamily: "Roboto", textAlign: "center", fontSize: 20 }}>Confirm Your Account</Text>
+                        <Text style={{ fontWeight: "bold", fontFamily: "Roboto", textAlign: "center", fontSize: normalize(20) }}>Confirm Your Account</Text>
                         <Text>{}</Text>
                         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
                             <FontAwesome5 name="user" size={20} color="#581845" style={styles.icon} />
@@ -117,11 +125,11 @@ const styles = StyleSheet.create({
         left: '10%',
         top: "25%",
         bottom: '10%',
-        height: 400,
-        padding: 25,
+        height: normalize(400),
+        padding: normalize(25),
         borderColor: '#fff',
         borderWidth: 5,
-        borderRadius: 15,
+        borderRadius: normalize(15),
         backgroundColor: '#fff',
         position: "absolute",
         shadowColor: '#000',
@@ -139,7 +147,7 @@ const styles = StyleSheet.create({
     },
     loginText: {
         color: 'grey',
-        marginTop: 25,
+        marginTop: normalize(25),
         textAlign: 'center'
     },
     preloader: {

@@ -69,7 +69,7 @@ export default class NewsScreen extends React.Component {
                                         return (
                                             <TouchableOpacity style={styles.content} key={index} onPress={() => Linking.openURL(value.url)}>
                                                 <View style={{ justifyContent: "center" }}>
-                                                    <Image source={{ uri: value.urlToImage }} style={{ width: 125, height: 110, borderRadius: 5 }}></Image>
+                                                    <Image source={{ uri: value.urlToImage }} style={{ width: normalize(100), height: normalize(100),resizeMode:"cover", borderRadius: 5 }}></Image>
                                                 </View>
                                                 <View style={{ flex: 1 }}>
                                                     <View>
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: "row",
         width: "90%",
-        height: normalize(80),
+        height: normalize(50),
         justifyContent: "flex-start",
     },
     headerText: {

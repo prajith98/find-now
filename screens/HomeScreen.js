@@ -24,6 +24,7 @@ export default class HomeScreen extends React.Component {
     componentDidMount = async () => {
         const { navigation } = this.props;
         console.log(Device.modelName)
+        this.fetchData()
         this.focusListener = navigation.addListener('didFocus', () => {
             this.fetchData()
         });
@@ -79,8 +80,8 @@ export default class HomeScreen extends React.Component {
                                     <Text style={styles.subHeaderText2}>{this.state.displayStatus}</Text>
                                 </View>
                                 <TouchableOpacity style={styles.profile} onPress={() => this.props.navigation.navigate("ProfileScreen")}>
-                                    {this.state.photoAvailable ? (<Image source={{ uri: this.state.photoUrl }} style={{ width: "100%", height: "100%", borderRadius: 40 }} />)
-                                        : <Image source={require("../assets/profile-pic.png")} style={{ width: "100%", height: "100%", borderRadius: 40 }} />
+                                    {this.state.photoAvailable ? (<Image source={{ uri: this.state.photoUrl }} style={{resizeMode:"cover", width: normalize(70), height: normalize(70), borderRadius:normalize(90) }} />)
+                                        : <Image source={require("../assets/profile-pic.png")} style={{ resizeMode: "contain", width: normalize(70), height: normalize(70) }} />
                                     }
                                 </TouchableOpacity>
                             </View>
@@ -89,20 +90,20 @@ export default class HomeScreen extends React.Component {
                             <TouchableOpacity style={styles.moratorium} onPress={() => this.props.navigation.navigate('MCCScreen')}>
                                 <Image source={require("../assets/moratorium.png")} style={styles.btnIcon1} />
                                 <View style={{ flexDirection: "column", alignItems: "center" }}>
-                                    <Text style={{ fontSize: normalize(15), fontFamily: "Roboto", color: "white" }}>Moratorium Calulator (COVID-19)</Text>
+                                    <Text style={{ fontSize: normalize(15), fontFamily: "Roboto", color: "white" }}> Moratorium Calulator (COVID-19) </Text>
                                 </View>
-                                <Image source={require("../assets/new.png")} style={{ width: '10%', height: "50%", resizeMode: "contain" }} />
+                                <Image source={require("../assets/new.png")} style={{ width: normalize(25), height: normalize(25), resizeMode: "contain" }} />
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.emi} onPress={() => this.props.navigation.navigate('EMIScreen')}>
                                 <Image source={require("../assets/calculator.png")} style={styles.btnIcon1} />
                                 <View style={{ flexDirection: "column", alignItems: "center" }}>
-                                    <Text style={{ fontSize: normalize(15), fontFamily: "Roboto", color: "white" }}>EMI Calculator</Text>
+                                    <Text style={{ fontSize: normalize(15), fontFamily: "Roboto", color: "white" }}> EMI Calculator</Text>
                                 </View>
                             </TouchableOpacity>
                             <TouchableOpacity style={styles.loanProfile} onPress={() => this.props.navigation.navigate('LPScreen')}>
                                 <Image source={require("../assets/loan.png")} style={styles.btnIcon1} />
                                 <View style={{ flexDirection: "column", alignItems: "center" }}>
-                                    <Text style={{ fontSize: normalize(15), fontFamily: "Roboto", color: "white" }}>Track your Loan</Text>
+                                    <Text style={{ fontSize: normalize(15), fontFamily: "Roboto", color: "white" }}> Track your Loan</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
@@ -168,8 +169,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         backgroundColor: "#de0647",
         justifyContent: "flex-start",
-        width: "92%",
-        height: "25%",
+        width: normalize(350),
+        height: normalize(65),
         alignItems: "center",
         borderRadius: normalize(40),
         left: "30%",
@@ -182,8 +183,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         backgroundColor: "#de0647",
         justifyContent: "flex-start",
-        width: "90%",
-        height: "25%",
+        width: normalize(350),
+        height: normalize(65),
         alignItems: "center",
         borderRadius: normalize(40),
         left: "50%",
@@ -196,8 +197,8 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         backgroundColor: "#de0647",
         justifyContent: "flex-start",
-        width: "90%",
-        height: "25%",
+        width: normalize(350),
+        height: normalize(65),
         alignItems: "center",
         borderRadius: normalize(40),
         left: "70%",
@@ -213,8 +214,9 @@ const styles = StyleSheet.create({
         justifyContent: "space-evenly"
     },
     btnIcon1: {
-        height: "55%",
-        width: "15%",
+        height: normalize(35),
+        width: normalize(35),
+        marginLeft: normalize(10),
         resizeMode: "contain"
     },
     profile: {
@@ -224,10 +226,9 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.5,
         elevation: 10,
-        width: "20%",
-        height: "50%",
-        borderColor: "#E5AE56",
-        borderRadius: normalize(50)
+        width: normalize(70),
+        height: normalize(70),
+        borderRadius: normalize(50),
     },
     btnStyle: {
         alignItems: "center",

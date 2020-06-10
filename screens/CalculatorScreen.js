@@ -555,7 +555,7 @@ export default class CalculatorScreen extends React.Component {
                                 <History val={this.props.name} />
                                 :
                                 (
-                                    <KeyboardAwareScrollView keyboardShouldPersistTaps="always" contentContainerStyle={{ height: (windowHeight - (windowHeight / 6)) }}>
+                                    <KeyboardAwareScrollView keyboardShouldPersistTaps="always" contentContainerStyle={{ height: (windowHeight - (windowHeight / 7)) }}>
 
                                         <View style={styles.body}>
                                             <View style={{ width: "85%" }}>
@@ -715,7 +715,7 @@ const styles = StyleSheet.create({
     header: {
         flexDirection: "row",
         width: "90%",
-        height: windowHeight / 6
+        height: windowHeight / 7
 
     },
     headerText: {
