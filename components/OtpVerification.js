@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, StyleSheet, Text, View, TextInput, Image, TouchableOpacity, KeyboardAvoidingView, ActivityIndicator, Alert } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, BackHandler } from 'react-native';
 import Firebase, { db } from '../database/firebase';
 import { RFValue } from "react-native-responsive-fontsize";
 const { windowWidth, windowHeight } = Dimensions.get('window');
@@ -23,6 +23,11 @@ export default class OtpVerification extends Component {
                 counter: this.state.counter - 1
             })
         }, 1000)
+        const backHandler = BackHandler.addEventListener("hardwareBackPress", this.backPress);
+    }
+    backPress = () => {
+        this.props.navigation.navigate('OtpVerification')
+        return true;
     }
     componentWillUnmount = () => {
         clearInterval(this.state.timer);

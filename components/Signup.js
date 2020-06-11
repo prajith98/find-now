@@ -29,9 +29,16 @@ export default class Signup extends Component {
   }
 
   handleSignUp = () => {
-    const { name, email, password } = this.state
-    if (name === "" || email == "" || password == "")
-      Alert.alert("Enter all the details to signup")
+    const { name, email, password, mobile } = this.state
+    if (name === "" || email == "" || password == "" || mobile == "") {
+      Alert.alert("", "Enter all the details to signup")
+      return 0;
+    }
+    else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) || !(/^\d{10}$/.test(this.state.mobile))) {
+      console.log(this.state.mobile)
+      Alert.alert("", "Please Enter Correct Details")
+      return 0;
+    }
     else
       Firebase.auth()
         .createUserWithEmailAndPassword(email, password)
@@ -41,9 +48,9 @@ export default class Signup extends Component {
             photoURL: ""
           })
           const user = {
-            email: this.state.email,
-            name: this.state.name,
-            mobile: this.state.mobile,
+            email: email,
+            name: name,
+            mobile: mobile,
             photoUrl: "",
             gender: "Not Set",
             confirmed: true,
@@ -100,7 +107,8 @@ export default class Signup extends Component {
                 onChangeText={(val) => this.updateInputVal(val, 'email')}
               />
             </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+            <Text style={{ bottom: normalize(15), textAlign: "right", fontSize: normalize(10), color: "red" }}>{(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) || this.state.email == "" ? "" : "Invalid Email ID"}</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-around", bottom: normalize(12) }}>
               <FontAwesome5 name="phone" size={20} color="#581845" style={styles.icon} />
               <TextInput
                 style={styles.inputStyle}
@@ -111,7 +119,8 @@ export default class Signup extends Component {
                 onChangeText={(val) => this.updateInputVal(val, 'mobile')}
               />
             </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+            <Text style={{ bottom: normalize(25), textAlign: "right", fontSize: normalize(10), color: "red" }}>{(/^\d{10}$/.test(this.state.mobile)) || this.state.mobile == "" ? "" : "Invalid Mobile Number"}</Text>
+            <View style={{ flexDirection: "row", justifyContent: "space-around", bottom: normalize(18) }}>
               <FontAwesome5 name="key" size={20} color="#581845" style={styles.icon} />
               <TextInput
                 style={styles.inputStyle}

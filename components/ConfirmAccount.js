@@ -40,6 +40,13 @@ export default class ConfirmAccount extends Component {
             });
             return 0;
         }
+        else if (!(/^\d{10}$/.test(this.state.mobile))) {
+            Alert.alert("", "Invalid Mobile Number")
+            this.setState({
+                isLoading: false,
+            });
+            return 0;
+        }
         const updateDBRef = db.collection('users').doc(Firebase.auth().currentUser.uid);
         updateDBRef.update({
             mobile: this.state.mobile,

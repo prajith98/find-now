@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Dimensions, StyleSheet, Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert } from 'react-native';
+import { Dimensions, StyleSheet, Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, BackHandler } from 'react-native';
 import Firebase, { db } from '../database/firebase';
 import { RFValue } from "react-native-responsive-fontsize";
 const windowWidth = Dimensions.get('window').width;
@@ -18,7 +18,7 @@ export default class OtpVerifyScreen extends Component {
         this.timeout = 0;
     }
     componentDidMount() {
-        this.sendOTP();
+       this.sendOTP();
         this.state.timer = setInterval(() => {
             this.setState({
                 counter: this.state.counter - 1
@@ -99,7 +99,7 @@ export default class OtpVerifyScreen extends Component {
                 <View style={{ alignItems: "center", marginTop: '10%' }}>
                     <Image source={require('../components/images/logo1.png')} style={{ width: normalize(330), height: normalize(60) }}></Image>
                 </View>
-                <View style={{ alignItems: "center", height: normalize(280), top: "5%" }}>
+                <View style={{ alignItems: "center", height: normalize(230), top: "5%" }}>
                     <View style={styles.container}>
                         <KeyboardAvoidingView keyboardShouldPersistTaps='always' style={{ height: '100%', justifyContent: "space-evenly" }}>
                             <Text style={{ fontFamily: "Roboto", textAlign: "center", fontSize: RFValue(16, windowHeight) }}>Enter OTP sent to your mobile number</Text>
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        width: '80%',
+        width: '85%',
         padding: normalize(20),
         borderColor: '#fff',
         borderRadius: normalize(15),

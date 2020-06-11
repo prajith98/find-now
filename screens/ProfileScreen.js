@@ -218,7 +218,6 @@ export default class Profile extends React.Component {
                 {
                     text: "Verify",
                     onPress: () => {
-                        console.log('verify pressed')
                         this.props.navigation.navigate("OtpVerifyScreen", { mobile: Number(this.state.mobile) })
                     }
                 }
@@ -238,7 +237,6 @@ export default class Profile extends React.Component {
                 {
                     text: "Send Mail",
                     onPress: () => {
-                        console.log('verify pressed')
                         Firebase.auth().currentUser.sendEmailVerification()
                     }
                 }
@@ -263,7 +261,7 @@ export default class Profile extends React.Component {
                                     {this.state.photoAvailable ? (<Image source={{ uri: this.state.photoUrl }} style={styles.profile} />)
                                         : (<Image source={require("../assets/profile-pic.png")} style={styles.profile} />)
                                     }
-                                    <Text style={{ fontSize: normalize(30), color: '#f8f3eb', fontWeight: "bold", width: "100%", textAlign: "center" }}>{this.state.name}</Text>
+                                    <Text style={{ fontSize: normalize(25), color: '#f8f3eb', fontWeight: "bold", width: "140%", textAlign: "center" }}>{this.state.name}</Text>
                                     <TouchableOpacity onPress={() => this.RBSheet.open()} style={{ left: normalize(45), bottom: normalize(85), width: normalize(45), height: normalize(45), borderRadius: normalize(50), justifyContent: "center", alignItems: "center", backgroundColor: "#15D29D" }}>
                                         <Image source={require("../assets/photograph.png")} style={{ resizeMode: "contain", width: normalize(25), height: normalize(25) }} />
                                     </TouchableOpacity>
@@ -332,8 +330,8 @@ export default class Profile extends React.Component {
                                             {this.state.mobileVerified ?
                                                 <Image source={require("../assets/verified.png")} style={{ left: normalize(70), width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
                                                 : (
-                                                    <TouchableOpacity onPress={this.goToVerification}>
-                                                        <Image source={require("../assets/notverified.png")} style={{ left: normalize(70), width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
+                                                    <TouchableOpacity onPress={this.goToVerification} style={{ left: normalize(70), }}>
+                                                        <Image source={require("../assets/notverified.png")} style={{ width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
                                                     </TouchableOpacity>
                                                 )
                                             }
@@ -458,7 +456,7 @@ const styles = StyleSheet.create({
         fontFamily: "Roboto"
     },
     textInput: {
-        fontSize: normalize(20),
+        fontSize: normalize(16),
         paddingLeft: normalize(20),
         paddingRight: normalize(50),
         fontFamily: "Roboto",

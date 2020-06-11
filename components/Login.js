@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ActivityIndicator, TouchableOpacity, Image, KeyboardAvoidingView, Keyboard } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, ActivityIndicator, TouchableOpacity, Image, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
 import Firebase, { db } from '../database/firebase';
 import { FontAwesome5, Entypo } from '@expo/vector-icons';
 import * as Google from 'expo-google-app-auth';
@@ -147,6 +147,7 @@ export default class Login extends Component {
           })
         return result.accessToken;
       } else {
+        Alert.alert("", "The email address is already in use by another account.")
         return { cancelled: true };
       }
     } catch (e) {
