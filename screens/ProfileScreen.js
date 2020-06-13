@@ -12,6 +12,7 @@ import { YellowBox } from 'react-native';
 import Firebase, { db } from '../database/firebase'
 import RadioForm from 'react-native-simple-radio-button';
 import normalize from 'react-native-normalize';
+import PhoneInput from "react-native-phone-input";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 YellowBox.ignoreWarnings(['Warning: ...']);
@@ -40,12 +41,20 @@ export default class Profile extends React.Component {
             initial: 0,
             encMobile: "",
             encEmail: "",
+            validNumber: false,
         }
     }
-    componentDidMount = async () => {
-        await this.getDataFromFirestore();
+    componentDidMount = () => {
+        this.focusListener = this.props.navigation.addListener('didFocus', () => {
+            this.getDataFromFirestore();
+        });
         this.setState({ isLoading: false })
         this.getPermissionAsync();
+
+    }
+    
+    componentWillUnmount = () => {
+        this.focusListener.remove();
     }
     getDataFromFirestore = () => {
         const firestoreRef = db.collection('users').doc(Firebase.auth().currentUser.uid);
@@ -77,7 +86,7 @@ export default class Profile extends React.Component {
                                         this.setState({ emailVerified: true })
                                     })
                                 }
-                            var number = this.state.mobile.slice(0, 4) + "XXXX" + this.state.mobile.slice(8, 10)
+                            var number = this.state.mobile.slice(0, 5) + "XXXXX" + this.state.mobile.slice(9)
                             this.setState({ encMobile: number })
                             var n = this.state.email.indexOf('@')
                             var e = this.state.email.slice(0, 4) + 'x'.repeat(n - 4) + this.state.email.slice(n, this.state.email.length)
@@ -99,6 +108,12 @@ export default class Profile extends React.Component {
         const state = this.state;
         state[prop] = val;
         this.setState(state);
+    }
+    updateMobile = () => {
+        this.setState({
+            newMobile: this.phone.getValue(),
+            validNumber: this.phone.isValidNumber(),
+        })
     }
     capturePhoto = () => {
         this.RBSheet.close()
@@ -165,25 +180,21 @@ export default class Profile extends React.Component {
     }
     doneEdit = () => {
         console.log(this.state.newMobile)
+        const mobileType = this.phone.getNumberType();
         if (this.state.newMobile == "" || this.state.newEmail == "")
-            Alert.alert('', 'Kindly enter the values');
+            Alert.alert('', 'Kindly enter your details');
+        else if (!this.state.validNumber)
+            Alert.alert('', 'Invalid Mobile Number')
         else {
             this.setState({
                 isLoading: true,
             });
             if (this.state.newMobile != this.state.mobile) {
-                this.props.navigation.navigate("OtpVerifyScreen", { mobile: Number(this.state.newMobile) })
-                const firestoreRef = db.collection('users').doc(Firebase.auth().currentUser.uid);
-                firestoreRef.get()
-                    .then(async (doc) => {
-                        if (doc.exists) {
-                            console.log(doc.data())
-                            await this.setState({
-                                mobile: doc.data().mobile,
-                                newMobile: doc.data().mobile
-                            })
-                        }
-                    })
+                if (mobileType !== "MOBILE")
+                    Alert.alert("Invalid Details!", "Invalid Mobile Number")
+                else {
+                    this.props.navigation.navigate("OtpVerifyScreen", { mobile: this.state.newMobile })
+                }
             }
             if (this.state.newEmail != this.state.email) {
                 var user = Firebase.auth().currentUser;
@@ -218,7 +229,8 @@ export default class Profile extends React.Component {
                 {
                     text: "Verify",
                     onPress: () => {
-                        this.props.navigation.navigate("OtpVerifyScreen", { mobile: Number(this.state.mobile) })
+                        this.props.navigation.navigate("OtpVerifyScreen", { mobile: (this.state.mobile) })
+
                     }
                 }
             ],
@@ -261,10 +273,10 @@ export default class Profile extends React.Component {
                                     {this.state.photoAvailable ? (<Image source={{ uri: this.state.photoUrl }} style={styles.profile} />)
                                         : (<Image source={require("../assets/profile-pic.png")} style={styles.profile} />)
                                     }
-                                    <Text style={{ fontSize: normalize(25), color: '#f8f3eb', fontWeight: "bold", width: "140%", textAlign: "center" }}>{this.state.name}</Text>
-                                    <TouchableOpacity onPress={() => this.RBSheet.open()} style={{ left: normalize(45), bottom: normalize(85), width: normalize(45), height: normalize(45), borderRadius: normalize(50), justifyContent: "center", alignItems: "center", backgroundColor: "#15D29D" }}>
+                                    <TouchableOpacity onPress={() => this.RBSheet.open()} style={{ left: normalize(45), bottom: normalize(40), width: normalize(45), height: normalize(45), borderRadius: normalize(50), justifyContent: "center", alignItems: "center", backgroundColor: "#15D29D" }}>
                                         <Image source={require("../assets/photograph.png")} style={{ resizeMode: "contain", width: normalize(25), height: normalize(25) }} />
                                     </TouchableOpacity>
+                                    <Text style={{ fontSize: normalize(25), color: '#f8f3eb', fontWeight: "bold", width: "140%", bottom: normalize(30), textAlign: "center" }}>{this.state.name}</Text>
                                 </View>}
 
                             backgroundColor="#f40552"
@@ -345,8 +357,8 @@ export default class Profile extends React.Component {
                                             {this.state.emailVerified ?
                                                 <Image source={require("../assets/verified.png")} style={{ left: normalize(70), width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
                                                 : (
-                                                    <TouchableOpacity onPress={this.sendEmailVerify}>
-                                                        <Image source={require("../assets/notverified.png")} style={{ left: normalize(70), width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
+                                                    <TouchableOpacity onPress={this.sendEmailVerify} style={{ left: normalize(70) }}>
+                                                        <Image source={require("../assets/notverified.png")} style={{ width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
                                                     </TouchableOpacity>
                                                 )
                                             }
@@ -374,13 +386,23 @@ export default class Profile extends React.Component {
                                     : (
                                         <View style={styles.body}>
                                             <View style={{ alignItems: "flex-start", padding: 15, borderBottomWidth: 1, borderColor: "#f40552", width: "95%" }}>
-                                                <Text style={{ fontSize: normalize(18), fontWeight: "bold", fontFamily: "Roboto" }}>User Details</Text>
+                                                <Text style={{ fontSize: normalize(18), fontWeight: "bold", fontFamily: "Roboto" }}>Your Details</Text>
                                             </View>
                                             <View style={styles.combo1}>
                                                 <Feather name="phone" size={24} />
                                                 <View>
                                                     <Text style={styles.textHeader}>Mobile Number</Text>
-                                                    <TextInput keyboardType={"phone-pad"} style={styles.textInput} onChangeText={(val) => this.updateInputVal(val, 'newMobile')} value={this.state.newMobile} editable={this.state.editable}></TextInput>
+                                                    {/* <TextInput keyboardType={"phone-pad"} style={styles.textInput} onChangeText={(val) => this.updateInputVal(val, 'newMobile')} value={this.state.newMobile} editable={this.state.editable}></TextInput> */}
+                                                    <PhoneInput
+                                                        initialCountry="in"
+                                                        value={this.state.mobile}
+                                                        textProps={{ placeholder: "Mobile No" }}
+                                                        ref={ref => {
+                                                            this.phone = ref;
+                                                        }}
+                                                        onChangePhoneNumber={this.updateMobile}
+                                                        style={styles.textInput}
+                                                    />
                                                 </View>
                                             </View>
                                             <View style={styles.combo1}>

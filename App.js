@@ -56,7 +56,7 @@ const AuthStack = createStackNavigator({
     navigationOptions: ({ navigation }) => ({
       headerShown: false
     })
-  }
+  },
 }, {
   initialRouteParams: "Signin",
 })

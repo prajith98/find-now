@@ -6,6 +6,7 @@ const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import OTPTextView from 'react-native-otp-textinput';
 import normalize from 'react-native-normalize';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 export default class OtpVerifyScreen extends Component {
     constructor(props) {
@@ -13,12 +14,13 @@ export default class OtpVerifyScreen extends Component {
         this.state = {
             otp: '',
             timer: null,
-            counter: 30
+            counter: 30,
+            loading: false,
         }
         this.timeout = 0;
     }
     componentDidMount() {
-       this.sendOTP();
+        this.sendOTP();
         this.state.timer = setInterval(() => {
             this.setState({
                 counter: this.state.counter - 1
@@ -29,6 +31,7 @@ export default class OtpVerifyScreen extends Component {
         clearInterval(this.state.timer);
     }
     submit = () => {
+        this.setState({ loading: true })
         const mobile = this.props.navigation.state.params.mobile
         fetch('https://us-central1-global-gist-279416.cloudfunctions.net/verifyOTP', {
             method: 'POST',
@@ -48,10 +51,10 @@ export default class OtpVerifyScreen extends Component {
                 if (jsonData.type == "success") {
                     const updateDBRef = db.collection('users').doc(Firebase.auth().currentUser.uid);
                     updateDBRef.update({
-                        mobile: mobile.toString(),
+                        mobile: mobile,
                         mobileVerified: true,
                     })
-                        .then(() => this.props.navigation.navigate('ProfileScreen'))
+                        .then(() => this.props.navigation.navigate('ProfileScreen',{mobile:mobile}).then(() => this.setState({ loading: false })))
                     Alert.alert("", "Verification Complete!")
                 }
                 else
@@ -103,6 +106,9 @@ export default class OtpVerifyScreen extends Component {
                     <View style={styles.container}>
                         <KeyboardAvoidingView keyboardShouldPersistTaps='always' style={{ height: '100%', justifyContent: "space-evenly" }}>
                             <Text style={{ fontFamily: "Roboto", textAlign: "center", fontSize: RFValue(16, windowHeight) }}>Enter OTP sent to your mobile number</Text>
+                            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                                <Text style={{ fontFamily: "Roboto", textAlign: "right", fontSize: normalize(15), color: "#0CE2FE" }}>Wrong Number?</Text>
+                            </TouchableOpacity>
                             <OTPTextView
                                 ref={(e) => (this.input1 = e)}
                                 textInputStyle={{ fontSize: RFValue(16, windowHeight) }}
@@ -121,6 +127,11 @@ export default class OtpVerifyScreen extends Component {
                                 <Text style={styles.btnStyle}>Submit</Text>
                             </TouchableOpacity>
                         </KeyboardAvoidingView>
+                        <Spinner
+                            textStyle={{ color: "white", width: "100%", textAlign: "center" }}
+                            visible={this.state.loading}
+                            textContent={'Loading...'}
+                        />
                     </View>
                 </View>
             </View >

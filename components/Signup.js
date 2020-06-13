@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, Button, ActivityIndicator, Image, To
 import Firebase, { db } from '../database/firebase';
 import { FontAwesome5, Feather } from '@expo/vector-icons';
 import normalize from 'react-native-normalize';
-
+import PhoneInput from "react-native-phone-input";
 import Modal from 'react-native-modal';
 export default class Signup extends Component {
   constructor() {
@@ -15,8 +15,24 @@ export default class Signup extends Component {
       password: '',
       hidePassword: true,
       isLoading: false,
-      t_cVisible: false
+      t_cVisible: false,
+      pickerData: null,
+      validNumber: "",
+      value: ""
     }
+  }
+
+  componentDidMount() {
+    this.setState({
+      pickerData: this.phone.getPickerData(),
+      validNumber: this.phone.isValidNumber(),
+    });
+  }
+  updateMobile = () => {
+    this.setState({
+      mobile: this.phone.getValue(),
+      validNumber: this.phone.isValidNumber(),
+    })
   }
   managePasswordVisibility = () => {
     this.setState({ hidePassword: !this.state.hidePassword });
@@ -27,53 +43,28 @@ export default class Signup extends Component {
     state[prop] = val;
     this.setState(state);
   }
-
   handleSignUp = () => {
+    const mobileType = this.phone.getNumberType();
     const { name, email, password, mobile } = this.state
     if (name === "" || email == "" || password == "" || mobile == "") {
       Alert.alert("", "Enter all the details to signup")
       return 0;
     }
-    else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) || !(/^\d{10}$/.test(this.state.mobile))) {
-      console.log(this.state.mobile)
-      Alert.alert("", "Please Enter Correct Details")
+    else if (!(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email))) {
+      Alert.alert("Invalid Details!", "Invalid Email ID")
       return 0;
     }
-    else
-      Firebase.auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then((res) => {
-          res.user.updateProfile({
-            displayName: this.state.name,
-            photoURL: ""
-          })
-          const user = {
-            email: email,
-            name: name,
-            mobile: mobile,
-            photoUrl: "",
-            gender: "Not Set",
-            confirmed: true,
-            emailVerified: false,
-            mobileVerified: false,
-          }
-
-          db.collection('users')
-            .doc(res.user.uid)
-            .set(user)
-          console.log('User registered successfully!' + name)
-          res.user
-            .sendEmailVerification()
-            .then(() => Alert.alert("Please verify your e-mail", "A verifaction mail has been sent to your mail address"))
-            .catch(error => alert(error))
-            .catch(function (error) {
-              // Some error occurred, you can inspect the code: error.code
-            });
-          this.props.navigation.navigate('OtpVerification', { mobile: Number(this.state.mobile) })
-        })
-        .catch(error => alert(error))
+    else if (!this.state.validNumber) {
+      Alert.alert("Invalid Details!", "Invalid Mobile Number")
+      return 0;
+    }
+    else if (this.state.validNumber) {
+      if (mobileType !== "MOBILE")
+        Alert.alert("Invalid Details!", "Invalid Mobile Number")
+      else
+        this.props.navigation.navigate('OtpVerification', { name: this.state.name, email: this.state.email, mobile: this.state.mobile, password: this.state.password, photoURL: "", emailVerified: false })
+    }
   }
-
   render() {
     if (this.state.isLoading) {
       return (
@@ -110,16 +101,17 @@ export default class Signup extends Component {
             <Text style={{ bottom: normalize(15), textAlign: "right", fontSize: normalize(10), color: "red" }}>{(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) || this.state.email == "" ? "" : "Invalid Email ID"}</Text>
             <View style={{ flexDirection: "row", justifyContent: "space-around", bottom: normalize(12) }}>
               <FontAwesome5 name="phone" size={20} color="#581845" style={styles.icon} />
-              <TextInput
+              <PhoneInput
+                initialCountry="in"
+                textProps={{ placeholder: "Mobile No" }}
+                ref={ref => {
+                  this.phone = ref;
+                }}
+                onChangePhoneNumber={this.updateMobile}
                 style={styles.inputStyle}
-                placeholder="Mobile No"
-                maxLength={10}
-                keyboardType={"phone-pad"}
-                value={this.state.mobile}
-                onChangeText={(val) => this.updateInputVal(val, 'mobile')}
               />
             </View>
-            <Text style={{ bottom: normalize(25), textAlign: "right", fontSize: normalize(10), color: "red" }}>{(/^\d{10}$/.test(this.state.mobile)) || this.state.mobile == "" ? "" : "Invalid Mobile Number"}</Text>
+            <Text style={{ bottom: normalize(25), textAlign: "right", fontSize: normalize(10), color: "red" }}>{this.state.validNumber || this.state.mobile == "" ? "" : "Invalid Mobile Number"}</Text>
             <View style={{ flexDirection: "row", justifyContent: "space-around", bottom: normalize(18) }}>
               <FontAwesome5 name="key" size={20} color="#581845" style={styles.icon} />
               <TextInput
@@ -134,7 +126,6 @@ export default class Signup extends Component {
                 <Image source={(this.state.hidePassword) ? require('./images/hide.png') : require('./images/view.png')} style={styles.btnImage} />
               </TouchableOpacity>
             </View>
-            <Text>{}</Text>
             <TouchableOpacity onPress={this.handleSignUp}>
               <Text style={styles.btnStyle}>SIGN UP</Text>
             </TouchableOpacity>
@@ -181,7 +172,7 @@ const styles = StyleSheet.create({
     left: '10%',
     top: "25%",
     bottom: '10%',
-    height: normalize(405),
+    height: normalize(380),
     padding: 25,
     borderColor: '#fff',
     borderWidth: 5,

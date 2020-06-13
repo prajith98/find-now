@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TextInput, Image, TouchableOpacity, KeyboardAvo
 import Firebase, { db } from '../database/firebase';
 import { FontAwesome5 } from '@expo/vector-icons';
 import normalize from 'react-native-normalize';
+import PhoneInput from "react-native-phone-input";
 
 export default class ConfirmAccount extends Component {
     constructor() {
@@ -11,8 +12,10 @@ export default class ConfirmAccount extends Component {
             name: '',
             email: '',
             mobile: '',
-            isLoading: true,
+            photoURL: '',
+            password: '',
             confirmed: false,
+            validNumber: '',
         }
     }
     componentDidMount() {
@@ -20,19 +23,19 @@ export default class ConfirmAccount extends Component {
         this.setState({
             email: params.email,
             name: params.name,
-            isLoading: false
+            photoURL: params.photoUrl,
+            password: params.password
         })
     }
-    mobileInputHandler = (enteredText) => {
+    mobileInputHandler = () => {
         this.setState({
-            mobile: enteredText
+            mobile: this.phone.getValue(),
+            validNumber: this.phone.isValidNumber(),
         })
     }
 
     done = () => {
-        this.setState({
-            isLoading: true,
-        });
+        const mobileType = this.phone.getNumberType();
         if (this.state.mobile == "") {
             Alert.alert("", "Enter your mobile number")
             this.setState({
@@ -40,42 +43,18 @@ export default class ConfirmAccount extends Component {
             });
             return 0;
         }
-        else if (!(/^\d{10}$/.test(this.state.mobile))) {
-            Alert.alert("", "Invalid Mobile Number")
-            this.setState({
-                isLoading: false,
-            });
+        else if (!this.state.validNumber) {
+            Alert.alert("Invalid Details!", "Invalid Mobile Number")
             return 0;
         }
-        const updateDBRef = db.collection('users').doc(Firebase.auth().currentUser.uid);
-        updateDBRef.update({
-            mobile: this.state.mobile,
-            confirmed: true
-        }).then(() => {
-            this.setState({
-                isLoading: false,
-                confirmed: false,
-            });
-        })
-            .then(() => {
-                this.props.navigation.navigate('OtpVerification', { mobile: Number(this.state.mobile) })
-
-            })
-            .catch((error) => {
-                console.error("Error: ", error);
-                this.setState({
-                    isLoading: false,
-                });
-            });
+        else if (this.state.validNumber) {
+            if (mobileType !== "MOBILE")
+                Alert.alert("Invalid Details!", "Invalid Mobile Number")
+            else
+                this.props.navigation.navigate('OtpVerification', { name: this.state.name, email: this.state.email, mobile: this.state.mobile, password: this.state.password, photoURL: this.state.photoURL, emailVerified: true })
+        }
     }
     render() {
-        if (this.state.isLoading) {
-            return (
-                <View style={styles.preloader}>
-                    <ActivityIndicator size="large" color="#f40552" />
-                </View>
-            )
-        }
         return (
             <View style={{ flex: 1, backgroundColor: "#f8f3eb" }}>
                 <View style={{ alignItems: "center", marginTop: '10%' }}>
@@ -103,11 +82,21 @@ export default class ConfirmAccount extends Component {
                         </View>
                         <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
                             <FontAwesome5 name="phone" size={20} color="#581845" style={styles.icon} />
-                            <TextInput
+                            {/* <TextInput
                                 style={styles.inputStyle}
                                 placeholder="Mobile No"
+                                keyboardType={"phone-pad"}
                                 value={this.state.mobile}
                                 onChangeText={this.mobileInputHandler}
+                            /> */}
+                            <PhoneInput
+                                initialCountry="in"
+                                textProps={{ placeholder: "Mobile No" }}
+                                ref={ref => {
+                                    this.phone = ref;
+                                }}
+                                onChangePhoneNumber={this.mobileInputHandler}
+                                style={styles.inputStyle}
                             />
                         </View>
                         <Text>{}</Text>
@@ -132,7 +121,7 @@ const styles = StyleSheet.create({
         left: '10%',
         top: "25%",
         bottom: '10%',
-        height: normalize(400),
+        height: normalize(320),
         padding: normalize(25),
         borderColor: '#fff',
         borderWidth: 5,

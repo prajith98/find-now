@@ -1,39 +1,53 @@
 import React, { Component } from 'react';
 import { Dimensions, StyleSheet, Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, BackHandler } from 'react-native';
 import Firebase, { db } from '../database/firebase';
-import { RFValue } from "react-native-responsive-fontsize";
 const { windowWidth, windowHeight } = Dimensions.get('window');
 import OTPTextView from 'react-native-otp-textinput';
 import normalize from 'react-native-normalize';
-
+import Spinner from 'react-native-loading-spinner-overlay';
 export default class OtpVerification extends Component {
     constructor(props) {
         super(props);
         this.state = {
             otp: '',
             timer: null,
-            counter: 30
+            counter: 30,
+            name: '',
+            email: '',
+            mobile: '',
+            password: '',
+            photoURL: '',
+            emailVerified: false,
+            loading: false,
         }
         this.timeout = 0;
     }
     componentDidMount() {
-        this.sendOTP();
+        this.focusListener = this.props.navigation.addListener('didFocus', () => {
+            const { params } = this.props.navigation.state;
+            this.setState({
+                name: params.name,
+                email: params.email,
+                mobile: params.mobile,
+                password: params.password,
+                photoURL: params.photoURL,
+                emailVerified: params.emailVerified,
+                counter: 30,
+            }, () => this.sendOTP())
+        })
         this.state.timer = setInterval(() => {
             this.setState({
                 counter: this.state.counter - 1
             })
         }, 1000)
-        const backHandler = BackHandler.addEventListener("hardwareBackPress", this.backPress);
-    }
-    backPress = () => {
-        this.props.navigation.navigate('OtpVerification')
-        return true;
+
     }
     componentWillUnmount = () => {
+        this.focusListener.remove();
         clearInterval(this.state.timer);
     }
     submit = () => {
-        const mobile = this.props.navigation.state.params.mobile
+        this.setState({ loading: true })
         fetch('https://us-central1-global-gist-279416.cloudfunctions.net/verifyOTP', {
             method: 'POST',
             headers: {
@@ -42,7 +56,7 @@ export default class OtpVerification extends Component {
             },
             body: JSON.stringify({
                 from: 'app',
-                mobile: mobile,
+                mobile: this.state.mobile,
                 otp: Number(this.state.otp)
             })
         })
@@ -50,22 +64,57 @@ export default class OtpVerification extends Component {
             .then((jsonData) => {
                 console.log(jsonData)
                 if (jsonData.type == "success") {
-                    const updateDBRef = db.collection('users').doc(Firebase.auth().currentUser.uid);
-                    updateDBRef.update({
-                        mobileVerified: true,
-                    })
-                        .then(() => this.props.navigation.navigate('App'))
+                    Firebase.auth()
+                        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+                        .then((res) => {
+                            res.user.updateProfile({
+                                displayName: this.state.name,
+                                photoURL: this.state.photoURL,
+                            })
+                            const user = {
+                                email: this.state.email,
+                                name: this.state.name,
+                                mobile: this.state.mobile.toString(),
+                                photoUrl: this.state.photoURL,
+                                gender: "Not Set",
+                                confirmed: true,
+                                emailVerified: this.state.emailVerified,
+                                mobileVerified: true,
+                            }
+                            db.collection('users')
+                                .doc(res.user.uid)
+                                .set(user)
+                            if (!this.state.emailVerified)
+                                res.user
+                                    .sendEmailVerification()
+                                    .then(() => Alert.alert("Please verify your e-mail", "A verifaction mail has been sent to your mail address"))
+                                    .catch(error => alert(error))
+                                    .catch(function (error) {
+                                        // Some error occurred, you can inspect the code: error.code
+                                    });
+                            this.props.navigation.navigate('App').then(() => this.setState({ loading: false }))
+                        })
+                        .catch(error => {
+                            var err = error
+                            if (err.toString() === "Error: The email address is already in use by another account.") {
+                                Firebase.auth()
+                                    .signInWithEmailAndPassword(this.state.email, this.state.password)
+                                    .then(() => this.props.navigation.navigate('App').then(() => this.setState({ loading: false })))
+                                    .catch(error => alert("Invalid Email Id or Password"))
+                            }
+                        })
                     Alert.alert("", "Verification Complete!")
                 }
-                else
+                else{
                     alert(jsonData.message)
+                    this.setState({ loading: false })
+                }
             })
             .catch((error) => {
                 console.error(error)
             })
     }
     sendOTP = () => {
-        const mobile = this.props.navigation.state.params.mobile
         fetch('https://us-central1-global-gist-279416.cloudfunctions.net/sendOTP', {
             method: 'POST',
             headers: {
@@ -74,13 +123,12 @@ export default class OtpVerification extends Component {
             },
             body: JSON.stringify({
                 from: 'app',
-                mobile: mobile
+                mobile: this.state.mobile
             })
         })
 
     }
     reSendOTP = () => {
-        const mobile = this.props.navigation.state.params.mobile
         fetch('https://us-central1-global-gist-279416.cloudfunctions.net/resendOTP', {
             method: 'POST',
             headers: {
@@ -89,7 +137,7 @@ export default class OtpVerification extends Component {
             },
             body: JSON.stringify({
                 from: 'app',
-                mobile: mobile
+                mobile: this.state.mobile
             })
         })
         this.setState({ counter: 30 })
@@ -100,10 +148,13 @@ export default class OtpVerification extends Component {
                 <View style={{ alignItems: "center", marginTop: '10%' }}>
                     <Image source={require('./images/logo1.png')} style={{ width: normalize(330), height: normalize(60) }}></Image>
                 </View>
-                <View style={{ alignItems: "center", height: normalize(280), top: "5%" }}>
+                <View style={{ alignItems: "center", height: normalize(220), top: "5%" }}>
                     <View style={styles.container}>
                         <KeyboardAvoidingView keyboardShouldPersistTaps='always' style={{ height: '100%', justifyContent: "space-evenly" }}>
-                            <Text style={{ fontFamily: "Roboto", textAlign: "center", fontSize: RFValue(16, windowHeight) }}>Enter OTP sent to your mobile number</Text>
+                            <Text style={{ fontFamily: "Roboto", textAlign: "center", fontSize: normalize(16) }}>Enter OTP sent to your mobile number</Text>
+                            <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
+                                <Text style={{ fontFamily: "Roboto", textAlign: "right", fontSize: normalize(15), color: "#0CE2FE" }}>Wrong Number?</Text>
+                            </TouchableOpacity>
                             <OTPTextView
                                 ref={(e) => (this.input1 = e)}
                                 textInputStyle={{ fontSize: normalize(16) }}
@@ -115,13 +166,18 @@ export default class OtpVerification extends Component {
                                 {
                                     this.state.counter >= 0 ?
                                         <Text style={{ textAlign: "right" }}>Resend OTP in {this.state.counter}s</Text>
-                                        : <Text style={{ textAlign: "right", borderBottomWidth: 0.5, borderColor: 'blue', color: 'blue' }} onPress={this.reSendOTP}>Resend OTP</Text>
+                                        : <Text style={{ textAlign: "right", borderBottomWidth: 0.5, borderColor: '#009EFB', color: '#009EFB' }} onPress={this.reSendOTP}>Resend OTP</Text>
                                 }
                             </View>
-                            <TouchableOpacity onPress={this.submit} style={{ height: "15%", alignItems: "center", top: "5%" }} >
+                            <TouchableOpacity onPress={this.submit} style={{ height: normalize(40), alignItems: "center", top: "5%" }} >
                                 <Text style={styles.btnStyle}>Submit</Text>
                             </TouchableOpacity>
                         </KeyboardAvoidingView>
+                        <Spinner
+                            textStyle={{ color: "white", width: "100%", textAlign: "center" }}
+                            visible={this.state.loading}
+                            textContent={'Loading...'}
+                        />
                     </View>
                 </View>
             </View >
@@ -135,7 +191,7 @@ const styles = StyleSheet.create({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        width: '80%',
+        width: '87%',
         padding: 20,
         borderColor: '#fff',
         borderRadius: 15,

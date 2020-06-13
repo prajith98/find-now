@@ -50,35 +50,18 @@ export default class Login extends Component {
         const response = await fetch(`https://graph.facebook.com/me?access_token=${token}&fields=name,picture.type(large),email`);
         const userInfo = await response.json();
         Firebase.auth()
-          .createUserWithEmailAndPassword(userInfo.email, userInfo.id)
-          .then((res) => {
-            res.user.updateProfile({
-              displayName: userInfo.name,
-              photoURL: userInfo.picture.data.url
-            })
-            const user = {
-              email: userInfo.email,
-              name: userInfo.name,
-              photoUrl: userInfo.picture.data.url,
-              gender: "Not Set",
-              confirmed: false,
-              emailVerified: true,
-              mobileVerified: false,
-            }
-            db.collection('users')
-              .doc(res.user.uid)
-              .set(user)
-            this.props.navigation.navigate('ConfirmAccount', { email: user.email, name: user.name })
-          })
+          .signInWithEmailAndPassword(userInfo.email, userInfo.id)
+          .then(() => this.props.navigation.navigate('App'))
           .catch(error => {
             var err = error
-            if (err.toString() === "Error: The email address is already in use by another account.") {
-              Firebase.auth()
-                .signInWithEmailAndPassword(userInfo.email, userInfo.id)
-                .then(() => this.props.navigation.navigate('App'))
-                .catch(error => alert("Invalid Email Id or Password"))
+            if (err.toString() === "Error: The password is invalid or the user does not have a password.") {
+              Alert.alert("Account Already Exists!", "Try sign in with your password")
+              return 0;
             }
-          })
+            else if (err.toString() === "Error: There is no user record corresponding to this identifier. The user may have been deleted.")
+            this.props.navigation.navigate('ConfirmAccount', { email: userInfo.email, name: userInfo.name, password: userInfo.id, photoUrl: userInfo.picture.data.url })
+          }
+          )
       } else {
         // type === 'cancel'
       }
@@ -108,46 +91,28 @@ export default class Login extends Component {
       })
     try {
       const result = await Google.logInAsync({
-        behavior: 'system',
         androidClientId: androidClientId,
         iosClientId: iosClientId,
         scopes: ['profile', 'email'],
       });
-
       if (result.type === 'success') {
+        console.log("here");
         Firebase.auth()
-          .createUserWithEmailAndPassword(result.user.email, result.user.photoUrl)
-          .then((res) => {
-            res.user.updateProfile({
-              displayName: result.user.givenName + " " + result.user.familyName,
-              photoURL: result.user.photoUrl
-            })
-            const user = {
-              email: result.user.email,
-              name: result.user.givenName + " " + result.user.familyName,
-              photoUrl: result.user.photoUrl,
-              gender: "Not Set",
-              confirmed: false,
-              emailVerified: true,
-              mobileVerified: false,
-            }
-            db.collection('users')
-              .doc(res.user.uid)
-              .set(user)
-            this.props.navigation.navigate('ConfirmAccount', { email: user.email, name: user.name })
-          })
+          .signInWithEmailAndPassword(result.user.email, result.user.photoUrl)
+          .then(() => this.props.navigation.navigate('App'))
           .catch(error => {
             var err = error
-            if (err.toString() === "Error: The email address is already in use by another account.") {
-              Firebase.auth()
-                .signInWithEmailAndPassword(result.user.email, result.user.photoUrl)
-                .then(() => this.props.navigation.navigate('App'))
-                .catch(error => alert("Invalid Email Id or Password"))
+            if (err.toString() === "Error: The password is invalid or the user does not have a password.") {
+              Alert.alert("Account Already Exists!", "Try sign in with your password")
+              return 0;
             }
-          })
+            else if (err.toString() === "Error: There is no user record corresponding to this identifier. The user may have been deleted.")
+              this.props.navigation.navigate('ConfirmAccount', { email: result.user.email, name: result.user.givenName + " " + result.user.familyName, password: result.user.photoUrl, photoUrl: result.user.photoUrl })
+          }
+          )
         return result.accessToken;
       } else {
-        Alert.alert("", "The email address is already in use by another account.")
+        Alert.alert("Signin Error", "Try using different method.")
         return { cancelled: true };
       }
     } catch (e) {
