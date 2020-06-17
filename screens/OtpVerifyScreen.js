@@ -16,11 +16,14 @@ export default class OtpVerifyScreen extends Component {
             timer: null,
             counter: 30,
             loading: false,
+            mobile: "",
         }
         this.timeout = 0;
     }
     componentDidMount() {
-        this.sendOTP();
+        const mobile = this.props.navigation.state.params.mobile
+        this.setState({ mobile: mobile.replace("+91", "+91 ") })
+        this.sendOTP(mobile);
         this.state.timer = setInterval(() => {
             this.setState({
                 counter: this.state.counter - 1
@@ -54,20 +57,18 @@ export default class OtpVerifyScreen extends Component {
                         mobile: mobile,
                         mobileVerified: true,
                     })
-                        .then(() => this.props.navigation.navigate('ProfileScreen',{mobile:mobile}).then(() => this.setState({ loading: false })))
+                        .then(() => this.props.navigation.navigate('ProfileScreen').then(() => this.setState({ loading: false })))
                     Alert.alert("", "Verification Complete!")
                 }
                 else
-                    alert(jsonData.message)
+                    this.props.navigation.navigate('ProfileScreen').then(() => this.setState({ loading: false }))
             })
             .catch((error) => {
                 console.error(error)
-                this.props.navigation.navigate('ProfileScreen')
+                this.props.navigation.navigate('ProfileScreen').then(() => this.setState({ loading: false }))
             })
     }
-    sendOTP = () => {
-        const mobile = this.props.navigation.state.params.mobile
-        console.log(mobile)
+    sendOTP = (mobile) => {
         fetch('https://us-central1-global-gist-279416.cloudfunctions.net/sendOTP', {
             method: 'POST',
             headers: {
@@ -105,7 +106,7 @@ export default class OtpVerifyScreen extends Component {
                 <View style={{ alignItems: "center", height: normalize(230), top: "5%" }}>
                     <View style={styles.container}>
                         <KeyboardAvoidingView keyboardShouldPersistTaps='always' style={{ height: '100%', justifyContent: "space-evenly" }}>
-                            <Text style={{ fontFamily: "Roboto", textAlign: "center", fontSize: RFValue(16, windowHeight) }}>Enter OTP sent to your mobile number</Text>
+                            <Text style={{ fontFamily: "Roboto", textAlign: "center", fontSize: RFValue(16, windowHeight) }}>Enter OTP sent to {this.state.mobile}</Text>
                             <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
                                 <Text style={{ fontFamily: "Roboto", textAlign: "right", fontSize: normalize(15), color: "#0CE2FE" }}>Wrong Number?</Text>
                             </TouchableOpacity>

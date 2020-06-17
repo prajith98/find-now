@@ -5,6 +5,8 @@ const { windowWidth, windowHeight } = Dimensions.get('window');
 import OTPTextView from 'react-native-otp-textinput';
 import normalize from 'react-native-normalize';
 import Spinner from 'react-native-loading-spinner-overlay';
+import * as Device from 'expo-device';
+import * as Network from 'expo-network';
 export default class OtpVerification extends Component {
     constructor(props) {
         super(props);
@@ -63,10 +65,10 @@ export default class OtpVerification extends Component {
             .then(response => response.json())
             .then((jsonData) => {
                 console.log(jsonData)
-                if (jsonData.type == "success") {
+                if (jsonData.type == "success" || jsonData.message == "Mobile no. already verified") {
                     Firebase.auth()
                         .createUserWithEmailAndPassword(this.state.email, this.state.password)
-                        .then((res) => {
+                        .then(async (res) => {
                             res.user.updateProfile({
                                 displayName: this.state.name,
                                 photoURL: this.state.photoURL,
@@ -81,9 +83,26 @@ export default class OtpVerification extends Component {
                                 emailVerified: this.state.emailVerified,
                                 mobileVerified: true,
                             }
+                            var date = new Date().getDate(); //Current Date
+                            var month = new Date().getMonth() + 1; //Current Month
+                            var year = new Date().getFullYear(); //Current Year
+                            var hours = new Date().getHours(); //Current Hours
+                            var min = new Date().getMinutes(); //Current Minutes
+                            var sec = new Date().getSeconds(); //Current Seconds
+                            var lastLogIn = date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec;
+                            var log = {}
+                            const device = {
+                                Device: Device.modelName,
+                                lastLogIn: lastLogIn,
+                                ipAdress: await Network.getIpAddressAsync(),
+                            }
+                            log[0] = device
                             db.collection('users')
                                 .doc(res.user.uid)
                                 .set(user)
+                            db.collection('device_log')
+                                .doc(res.user.uid)
+                                .set(log)
                             if (!this.state.emailVerified)
                                 res.user
                                     .sendEmailVerification()
@@ -105,7 +124,7 @@ export default class OtpVerification extends Component {
                         })
                     Alert.alert("", "Verification Complete!")
                 }
-                else{
+                else {
                     alert(jsonData.message)
                     this.setState({ loading: false })
                 }
@@ -151,7 +170,7 @@ export default class OtpVerification extends Component {
                 <View style={{ alignItems: "center", height: normalize(220), top: "5%" }}>
                     <View style={styles.container}>
                         <KeyboardAvoidingView keyboardShouldPersistTaps='always' style={{ height: '100%', justifyContent: "space-evenly" }}>
-                            <Text style={{ fontFamily: "Roboto", textAlign: "center", fontSize: normalize(16) }}>Enter OTP sent to your mobile number</Text>
+                            <Text style={{ fontFamily: "Roboto", textAlign: "center", fontSize: normalize(16) }}>Enter OTP sent to {this.state.mobile.replace('+91', '+91 ')}</Text>
                             <TouchableOpacity onPress={() => this.props.navigation.goBack()}>
                                 <Text style={{ fontFamily: "Roboto", textAlign: "right", fontSize: normalize(15), color: "#0CE2FE" }}>Wrong Number?</Text>
                             </TouchableOpacity>

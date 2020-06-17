@@ -54,13 +54,13 @@ export default class CalculatorScreen extends React.Component {
             calc: val
         })
         if (val == 0)
-            this.setState({ loanTextInputVisible: false, loanPlaceHolder: "?" })
+            this.setState({ loanTextInputVisible: false, loanPlaceHolder: "Calculate ?" })
         else if (val == 1)
-            this.setState({ rateTextInputVisible: false, ratePlaceHolder: "?" })
+            this.setState({ rateTextInputVisible: false, ratePlaceHolder: "Calculate ?" })
         else if (val == 2)
-            this.setState({ tenureTextInputVisible: false, tenurePlaceHolder: "?" })
+            this.setState({ tenureTextInputVisible: false, tenurePlaceHolder: "Calculate ?" })
         else if (val == 3)
-            this.setState({ emiTextInputVisible: false, emiPlaceHolder: "?" })
+            this.setState({ emiTextInputVisible: false, emiPlaceHolder: "Calculate ?" })
         var t = this.props.name;
         if (t == "EMI Calculator")
             this.setState({ from: "EMIScreen" })
@@ -337,7 +337,7 @@ export default class CalculatorScreen extends React.Component {
         var T = !this.state.tenureMode ? parseFloat(Tenure) : parseFloat(Tenure) * 12
         var E = parseFloat(EMI.replace(/,/g, "").replace('₹', ''))
         var L = Math.round((E / R) * (1 - (Math.pow((1 + R), -T)))).toString()
-        if (L > 0) {
+        if (!isNaN(L)) {
             this.setState({
                 Loan: L
             })
@@ -355,7 +355,7 @@ export default class CalculatorScreen extends React.Component {
         var T = !this.state.tenureMode ? parseFloat(Tenure) : parseFloat(Tenure) * 12
         var E = parseFloat(EMI.replace(/,/g, "").replace('₹', ''))
         var R = (this.RATE(T, -E, L, 0, 0, 0.01)).toFixed(2).toString()
-        if (R > 0) {
+        if (!isNaN(R)) {
             this.setState({
                 Rate: R
             })
@@ -382,7 +382,7 @@ export default class CalculatorScreen extends React.Component {
         var T = !this.state.tenureMode ? parseFloat(Tenure) : parseFloat(Tenure) * 12
         var L = parseFloat(Loan.replace(/,/g, "").replace('₹', ''))
         var E = Math.round((L * R) / (1 - (Math.pow((1 + R), -T)))).toString()
-        if (E > 0) {
+        if (!isNaN(E)) {
             this.setState({
                 EMI: E
             })
@@ -421,13 +421,13 @@ export default class CalculatorScreen extends React.Component {
             calc: val
         })
         if (val == 0)
-            this.setState({ loanTextInputVisible: false, emiTextInputVisible: true, rateTextInputVisible: true, tenureTextInputVisible: true, loanPlaceHolder: "?", ratePlaceHolder: "Rate of Interest", tenurePlaceHolder: "Tenure", emiPlaceHolder: "EMI" })
+            this.setState({ loanTextInputVisible: false, emiTextInputVisible: true, rateTextInputVisible: true, tenureTextInputVisible: true, loanPlaceHolder: "Calculate ?", ratePlaceHolder: "Rate of Interest", tenurePlaceHolder: "Tenure", emiPlaceHolder: "EMI" })
         else if (val == 1)
-            this.setState({ rateTextInputVisible: false, emiTextInputVisible: true, loanTextInputVisible: true, tenureTextInputVisible: true, ratePlaceHolder: "?", loanPlaceHolder: "Loan Amount", tenurePlaceHolder: "Tenure", emiPlaceHolder: "EMI" })
+            this.setState({ rateTextInputVisible: false, emiTextInputVisible: true, loanTextInputVisible: true, tenureTextInputVisible: true, ratePlaceHolder: "Calculate ?", loanPlaceHolder: "Loan Amount", tenurePlaceHolder: "Tenure", emiPlaceHolder: "EMI" })
         else if (val == 2)
-            this.setState({ tenureTextInputVisible: false, emiTextInputVisible: true, rateTextInputVisible: true, loanTextInputVisible: true, tenurePlaceHolder: "?", loanPlaceHolder: "Loan Amount", ratePlaceHolder: "Rate of Interest", emiPlaceHolder: "EMI" })
+            this.setState({ tenureTextInputVisible: false, emiTextInputVisible: true, rateTextInputVisible: true, loanTextInputVisible: true, tenurePlaceHolder: "Calculate ?", loanPlaceHolder: "Loan Amount", ratePlaceHolder: "Rate of Interest", emiPlaceHolder: "EMI" })
         else if (val == 3)
-            this.setState({ emiTextInputVisible: false, rateTextInputVisible: true, loanTextInputVisible: true, tenureTextInputVisible: true, emiPlaceHolder: "?", loanPlaceHolder: "Loan Amount", ratePlaceHolder: "Rate of Interest", tenurePlaceHolder: "Tenure" })
+            this.setState({ emiTextInputVisible: false, rateTextInputVisible: true, loanTextInputVisible: true, tenureTextInputVisible: true, emiPlaceHolder: "Calculate ?", loanPlaceHolder: "Loan Amount", ratePlaceHolder: "Rate of Interest", tenurePlaceHolder: "Tenure" })
     }
     radioCall = (value) => {
         if (value == 3) {
@@ -437,7 +437,7 @@ export default class CalculatorScreen extends React.Component {
                 this.setState({ loanPlaceHolder: "Loan Amount" })
             else if (this.state.calc == 2)
                 this.setState({ tenurePlaceHolder: "Tenure" })
-            this.setState({ emiPlaceHolder: "?", EMI: "", emiInWords: "" })
+            this.setState({ emiPlaceHolder: "Calculate ?", EMI: "", emiInWords: "" })
             this.setState({ emiTextInputVisible: false })
             this.setState({ rateTextInputVisible: true })
             this.setState({ loanTextInputVisible: true })
@@ -450,7 +450,7 @@ export default class CalculatorScreen extends React.Component {
                 this.setState({ loanPlaceHolder: "Loan Amount" })
             else if (this.state.calc == 2)
                 this.setState({ tenurePlaceHolder: "Tenure" })
-            this.setState({ ratePlaceHolder: "?", Rate: "" })
+            this.setState({ ratePlaceHolder: "Calculate ?", Rate: "" })
             this.setState({ emiTextInputVisible: true })
             this.setState({ rateTextInputVisible: false })
             this.setState({ loanTextInputVisible: true })
@@ -463,7 +463,7 @@ export default class CalculatorScreen extends React.Component {
                 this.setState({ emiPlaceHolder: "EMI" })
             else if (this.state.calc == 2)
                 this.setState({ tenurePlaceHolder: "Tenure" })
-            this.setState({ loanPlaceHolder: "?", Loan: "", loanInWords: "" })
+            this.setState({ loanPlaceHolder: "Calculate ?", Loan: "", loanInWords: "" })
             this.setState({ emiTextInputVisible: true })
             this.setState({ rateTextInputVisible: true })
             this.setState({ loanTextInputVisible: false })
@@ -476,7 +476,7 @@ export default class CalculatorScreen extends React.Component {
                 this.setState({ loanPlaceHolder: "Loan Amount" })
             else if (this.state.calc == 3)
                 this.setState({ emiPlaceHolder: "EMI" })
-            this.setState({ tenurePlaceHolder: "?", Tenure: "" })
+            this.setState({ tenurePlaceHolder: "Calculate ?", Tenure: "" })
             this.setState({ emiTextInputVisible: true })
             this.setState({ rateTextInputVisible: true })
             this.setState({ loanTextInputVisible: true })

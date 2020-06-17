@@ -4,8 +4,10 @@ import Firebase, { db } from '../database/firebase';
 import { FontAwesome5, Entypo } from '@expo/vector-icons';
 import * as Google from 'expo-google-app-auth';
 import * as Facebook from 'expo-facebook';
+import * as Device from 'expo-device';
 import LinkedInModal, { LinkedInToken } from 'react-native-linkedin'
 import normalize from 'react-native-normalize';
+import * as Network from 'expo-network';
 // import Constants from "expo-constants";
 export default class Login extends Component {
 
@@ -52,6 +54,31 @@ export default class Login extends Component {
         Firebase.auth()
           .signInWithEmailAndPassword(userInfo.email, userInfo.id)
           .then(() => this.props.navigation.navigate('App'))
+          .then(async () => {
+            const dbRef = db.collection('device_log').doc(Firebase.auth().currentUser.uid)
+            var date = new Date().getDate(); //Current Date
+            var month = new Date().getMonth() + 1; //Current Month
+            var year = new Date().getFullYear(); //Current Year
+            var hours = new Date().getHours(); //Current Hours
+            var min = new Date().getMinutes(); //Current Minutes
+            var sec = new Date().getSeconds(); //Current Seconds
+            var lastLogIn = date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec
+            var oldLog = {}
+            await dbRef.get()
+              .then((res) => {
+                oldLog = res.data();
+              })
+            const curr_log = {
+              Device: Device.modelName,
+              lastLogIn: lastLogIn,
+              ipAdress: await Network.getIpAddressAsync(),
+            }
+            var count = Object.keys(oldLog).length;
+            oldLog[count] = curr_log
+            db.collection('device_log')
+              .doc(Firebase.auth().currentUser.uid)
+              .update(oldLog)
+          })
           .catch(error => {
             var err = error
             if (err.toString() === "Error: The password is invalid or the user does not have a password.") {
@@ -59,7 +86,7 @@ export default class Login extends Component {
               return 0;
             }
             else if (err.toString() === "Error: There is no user record corresponding to this identifier. The user may have been deleted.")
-            this.props.navigation.navigate('ConfirmAccount', { email: userInfo.email, name: userInfo.name, password: userInfo.id, photoUrl: userInfo.picture.data.url })
+              this.props.navigation.navigate('ConfirmAccount', { email: userInfo.email, name: userInfo.name, password: userInfo.id, photoUrl: userInfo.picture.data.url })
           }
           )
       } else {
@@ -96,10 +123,35 @@ export default class Login extends Component {
         scopes: ['profile', 'email'],
       });
       if (result.type === 'success') {
-        console.log("here");
         Firebase.auth()
           .signInWithEmailAndPassword(result.user.email, result.user.photoUrl)
           .then(() => this.props.navigation.navigate('App'))
+          .then(async () => {
+            const dbRef = db.collection('device_log').doc(Firebase.auth().currentUser.uid)
+            var date = new Date().getDate(); //Current Date
+            var month = new Date().getMonth() + 1; //Current Month
+            var year = new Date().getFullYear(); //Current Year
+            var hours = new Date().getHours(); //Current Hours
+            var min = new Date().getMinutes(); //Current Minutes
+            var sec = new Date().getSeconds(); //Current Seconds
+            var lastLogIn = date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec
+            var oldLog = {}
+            await dbRef.get()
+              .then((res) => {
+                oldLog = res.data();
+              })
+            console.log(oldLog)
+            const curr_log = {
+              Device: Device.modelName,
+              lastLogIn: lastLogIn,
+              ipAdress: await Network.getIpAddressAsync(),
+            }
+            var count = Object.keys(oldLog).length;
+            oldLog[count] = curr_log
+            db.collection('device_log')
+              .doc(Firebase.auth().currentUser.uid)
+              .update(oldLog)
+          })
           .catch(error => {
             var err = error
             if (err.toString() === "Error: The password is invalid or the user does not have a password.") {
@@ -131,6 +183,32 @@ export default class Login extends Component {
     Firebase.auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => this.props.navigation.navigate('App'))
+      .then(async () => {
+        const dbRef = db.collection('device_log').doc(Firebase.auth().currentUser.uid)
+        var date = new Date().getDate(); //Current Date
+        var month = new Date().getMonth() + 1; //Current Month
+        var year = new Date().getFullYear(); //Current Year
+        var hours = new Date().getHours(); //Current Hours
+        var min = new Date().getMinutes(); //Current Minutes
+        var sec = new Date().getSeconds(); //Current Seconds
+        var lastLogIn = date + '/' + month + '/' + year + ' ' + hours + ':' + min + ':' + sec
+        var oldLog = {}
+        await dbRef.get()
+          .then((res) => {
+            oldLog = res.data();
+          })
+        console.log(oldLog)
+        const curr_log = {
+          Device: Device.modelName,
+          lastLogIn: lastLogIn,
+          ipAdress: await Network.getIpAddressAsync(),
+        }
+        var count = Object.keys(oldLog).length;
+        oldLog[count] = curr_log
+        db.collection('device_log')
+          .doc(Firebase.auth().currentUser.uid)
+          .update(oldLog)
+      })
       .catch(error => alert("Invalid Email Id or Password"))
   }
   managePasswordVisibility = () => {
@@ -279,7 +357,7 @@ export default class Login extends Component {
             </TouchableOpacity>
             <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginTop: 20 }}>
               <TouchableOpacity>
-                <Entypo name="google--with-circle" color="#EA4335" size={45} onPress={this.signInWithGoogleAsync} />
+                <Entypo name="google--with-circle" color="#EA4335" size={45} onPress={() => this.signInWithGoogleAsync()} />
               </TouchableOpacity>
               <TouchableOpacity>
                 <Entypo name="facebook-with-circle" color="#3b5998" size={45} onPress={this.loginWithFacebook} />
@@ -310,9 +388,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: '80%',
     left: '10%',
-    top: "25%",
-    bottom: '10%',
-    height: normalize(400),
+    top: normalize(140),
+    height: normalize(380),
     padding: 25,
     borderColor: '#fff',
     borderWidth: 5,

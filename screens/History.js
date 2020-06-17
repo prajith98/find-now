@@ -74,7 +74,7 @@ export default class History extends Component {
             <View styles={styles.container}>
                 <ScrollView>
                     <Table>
-                        <Row data={state.tableHead} style={styles.head} textStyle={styles.text1} widthArr={[normalize(90), normalize(60), normalize(55), normalize(75), normalize(50), normalize(57)]} />
+                        <Row data={state.tableHead} style={styles.head} textStyle={styles.text1} widthArr={[normalize(90), normalize(55), normalize(60), normalize(75), normalize(50), normalize(57)]} />
                         {state.tableData ?
                             state.tableData.map((rowData, index) => (
                                 <TableWrapper key={index} style={[styles.row, !(index % 2) && { backgroundColor: 'white' }]} >
@@ -83,7 +83,7 @@ export default class History extends Component {
                                             <Cell key={cellIndex}
                                                 data={cellIndex === 5 ? elementDelete(index) : cellIndex === 4 ? elementShare(index) : cellData}
                                                 textStyle={styles.text}
-                                                width={cellIndex === 0 ? normalize(95) : cellIndex === 1 ? normalize(55) : cellIndex === 2 ? normalize(55) : cellIndex === 3 ? normalize(78) : normalize(55)}
+                                                width={cellIndex === 0 ? normalize(95) : cellIndex === 1 ? normalize(51) : cellIndex === 2 ? normalize(60) : cellIndex === 3 ? normalize(78) : normalize(55)}
                                             />
                                         ))
                                     }

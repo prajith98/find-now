@@ -48,9 +48,9 @@ export default class ConfirmAccount extends Component {
             return 0;
         }
         else if (this.state.validNumber) {
-            if (mobileType !== "MOBILE")
+            if (mobileType !== "MOBILE" && mobileType !== "FIXED_LINE_OR_MOBILE")
                 Alert.alert("Invalid Details!", "Invalid Mobile Number")
-            else
+            else if (mobileType === "MOBILE" || mobileType === "FIXED_LINE_OR_MOBILE")
                 this.props.navigation.navigate('OtpVerification', { name: this.state.name, email: this.state.email, mobile: this.state.mobile, password: this.state.password, photoURL: this.state.photoURL, emailVerified: true })
         }
     }

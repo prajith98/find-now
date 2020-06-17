@@ -19,11 +19,11 @@
     ],
     "ios": {
       "bundleIdentifier": "com.switchtosave.findnow",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.1"
     },
     "android": {
       "package": "com.switchtosave.findnow",
-      "versionCode": 1
+      "versionCode": 2
     }
   }
 }

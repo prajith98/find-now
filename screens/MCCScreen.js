@@ -374,7 +374,7 @@ export default class MCCScreen extends React.Component {
         var T = parseFloat(Tenure)
         var E = parseFloat(EMI.replace(/,/g, ""))
         var R = (this.RATE(T, -E, L, 0, 0, 0.01)).toFixed(2).toString()
-        if (!isNaN(R) && R > 0)
+        if (!isNaN(R))
             this.setState({
                 Rate: R
             })
@@ -568,7 +568,7 @@ export default class MCCScreen extends React.Component {
                     this.setState({ loanPlaceHolder: "Balance Loan" })
                 else if (this.state.calc == 3)
                     this.setState({ tenurePlaceHolder: "Tenure" })
-                this.setState({ emiPlaceHolder: "?", EMI: "", emiInWords: "", a: false })
+                this.setState({ emiPlaceHolder: "Calculate ?", EMI: "", emiInWords: "", a: false })
                 this.setState({ emiTextInputVisible: false })
                 this.setState({ rateTextInputVisible: true })
                 this.setState({ loanTextInputVisible: true })
@@ -581,7 +581,7 @@ export default class MCCScreen extends React.Component {
                     this.setState({ loanPlaceHolder: "Balance Loan" })
                 else if (this.state.calc == 3)
                     this.setState({ tenurePlaceHolder: "Tenure" })
-                this.setState({ ratePlaceHolder: "?", Rate: "", b: false })
+                this.setState({ ratePlaceHolder: "Calculate ?", Rate: "", b: false })
                 this.setState({ emiTextInputVisible: true })
                 this.setState({ rateTextInputVisible: false })
                 this.setState({ loanTextInputVisible: true })
@@ -594,7 +594,7 @@ export default class MCCScreen extends React.Component {
                     this.setState({ emiPlaceHolder: "Current EMI" })
                 else if (this.state.calc == 3)
                     this.setState({ tenurePlaceHolder: "Tenure" })
-                this.setState({ loanPlaceHolder: "?", Loan: "", loanInWords: "", c: false })
+                this.setState({ loanPlaceHolder: "Calculate ?", Loan: "", loanInWords: "", c: false })
                 this.setState({ emiTextInputVisible: true })
                 this.setState({ rateTextInputVisible: true })
                 this.setState({ loanTextInputVisible: false })
@@ -607,7 +607,7 @@ export default class MCCScreen extends React.Component {
                     this.setState({ loanPlaceHolder: "Balance Loan" })
                 else if (this.state.calc == 0)
                     this.setState({ emiPlaceHolder: "Current EMI" })
-                this.setState({ tenurePlaceHolder: "?", Tenure: "", d: false })
+                this.setState({ tenurePlaceHolder: "Calculate ?", Tenure: "", d: false })
                 this.setState({ emiTextInputVisible: true })
                 this.setState({ rateTextInputVisible: true })
                 this.setState({ loanTextInputVisible: true })
@@ -728,7 +728,7 @@ export default class MCCScreen extends React.Component {
                                                 <View style={{ alignItems: "center", bottom: normalize(25) }}>
                                                     <View style={styles.combo2}>
                                                         <FontAwesome5 name="coins" size={20} color="#FFA62F" style={{ top: "5%" }} />
-                                                        <TextInput onTouchStart={() => this.setState({ a: true })} placeholder={this.state.emiPlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.emiInputHandler} value={this.state.EMI != "" ? (this.state.EMI != "?" ? (paisa.format(Number(this.state.EMI) * 100, 0)) : "?") : ""} editable={this.state.emiTextInputVisible}></TextInput>
+                                                        <TextInput onTouchStart={() => this.setState({ a: true })} placeholder={this.state.emiPlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.emiInputHandler} value={this.state.EMI != "" ? (this.state.EMI != "Calculate ?" ? (paisa.format(Number(this.state.EMI) * 100, 0)) : "Calculate ?") : ""} editable={this.state.emiTextInputVisible}></TextInput>
                                                     </View>
                                                 </View>
                                                 <Text style={{ fontSize: normalize(11), textAlign: "right", bottom: "60%", left: "13%", paddingTop: 3, width: "85%" }}>{this.state.emiInWords}</Text>
@@ -748,7 +748,7 @@ export default class MCCScreen extends React.Component {
                                                 <View style={{ alignItems: "center", bottom: normalize(25) }}>
                                                     <View style={styles.combo2}>
                                                         <MaterialCommunityIcons name="sack" size={20} color="#FFA62F" style={{ top: "5%" }} />
-                                                        <TextInput onTouchStart={() => this.setState({ c: true })} placeholder={this.state.loanPlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.loanInputHandler} value={this.state.Loan != "" ? (this.state.EMI != "?" ? (paisa.format(Number(this.state.Loan) * 100, 0)) : "?") : ""} editable={this.state.loanTextInputVisible}></TextInput>
+                                                        <TextInput onTouchStart={() => this.setState({ c: true })} placeholder={this.state.loanPlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.loanInputHandler} value={this.state.Loan != "" ? (this.state.EMI != "Calculate ?" ? (paisa.format(Number(this.state.Loan) * 100, 0)) : "Calculate ?") : ""} editable={this.state.loanTextInputVisible}></TextInput>
                                                     </View>
                                                 </View>
                                                 <Text style={{ fontSize: normalize(11), textAlign: "right", bottom: "60%", left: "13%", paddingTop: 3, width: "85%" }}>{this.state.loanInWords}</Text>

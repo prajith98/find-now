@@ -23,7 +23,6 @@ export default class HomeScreen extends React.Component {
     }
     componentDidMount = async () => {
         const { navigation } = this.props;
-        console.log(Device.modelName)
         this.fetchData()
         this.focusListener = navigation.addListener('didFocus', () => {
             this.fetchData()

@@ -12,12 +12,12 @@ import SideBar from '../components/SideBar'
 import HomeScreen from '../screens/HomeScreen'
 import BankScreen from '../screens/BankScreen'
 import ProfileStack from '../screens/ProfileSection';
-import { RFValue } from "react-native-responsive-fontsize";
 import ScheduleScreen from '../screens/ScheduleScreen';
 import { LoanScreen, EMIScreen, RateScreen, TenureScreen } from '../screens';
 import MCCStack from '../screens/MCCSection';
 import FeedBackScreen from '../screens/FeedbackScreen'
 import CompareLoanStack from '../screens/CompareLoanStack';
+import UserDeviceLog from '../screens/UserDeviceLog'
 import CLScreen2 from '../screens/CLScreen2';
 import CompareLoanStack2 from '../screens/CompareLoanStack2';
 import normalize from 'react-native-normalize';
@@ -122,6 +122,13 @@ const DrawerNavigator = createDrawerNavigator({
         navigationOptions: {
             drawerIcon: ({ tintColor }) => <Feather name="phone-call" size={16} color={tintColor} />,
             drawerLabel: () => <Text style={styles.label}>Contact Us</Text>
+        }
+    },
+    DeviceLogScreen: {
+        screen: UserDeviceLog,
+        navigationOptions: {
+            drawerIcon: ({ tintColor }) => <MaterialIcons name="perm-device-information" size={16} color={tintColor} />,
+            drawerLabel: () => <Text style={styles.label}>Device Log</Text>
         }
     },
     SignOutScreen: {

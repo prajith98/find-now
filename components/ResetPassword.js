@@ -35,7 +35,7 @@ export default class ResetPassword extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: "#f8f3eb" }} >
                 <View style={{ alignItems: "center", marginTop: '10%' }}>
-                    <Image source={require('./images/logo1.png')} style={{ width: 330, height: 60, }}></Image>
+                    <Image source={require('./images/logo1.png')} style={{ width: normalize(330), height: normalize(60) }}></Image>
                 </View>
                 <View style={styles.container}>
                     <KeyboardAvoidingView keyboardShouldPersistTaps='always'>

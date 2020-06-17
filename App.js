@@ -27,14 +27,14 @@ const LoadStack = createStackNavigator({
   initialRouteParams: "Signin",
 })
 const AuthStack = createStackNavigator({
-  Login: {
-    screen: Login,
+  Signup: {
+    screen: Signup,
     navigationOptions: ({ navigation }) => ({
       headerShown: false
     }),
   },
-  Signup: {
-    screen: Signup,
+  Login: {
+    screen: Login,
     navigationOptions: ({ navigation }) => ({
       headerShown: false
     }),
@@ -58,7 +58,7 @@ const AuthStack = createStackNavigator({
     })
   },
 }, {
-  initialRouteParams: "Signin",
+  initialRouteParams: "Signup",
 })
 const AppStack = createStackNavigator({
   DrawerNavigator: {
@@ -71,8 +71,8 @@ const AppStack = createStackNavigator({
 export default createAppContainer(createSwitchNavigator(
   {
     AuthLoading: LoadStack,
-    App: AppStack,
     Auth: AuthStack,
+    App: AppStack,
   },
   {
     initialRouteParams: 'AuthLoading',

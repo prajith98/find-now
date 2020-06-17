@@ -18,6 +18,7 @@
     "expo-facebook": "~8.1.0",
     "expo-google-app-auth": "^8.1.0",
     "expo-image-picker": "~8.1.0",
+    "expo-network": "~2.1.0",
     "expo-sharing": "~8.1.0",
     "firebase": "7.9.0",
     "geolib": "^3.2.1",

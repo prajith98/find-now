@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ActivityIndicator, Image, TouchableOpacity, Dimensions, Alert, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, ActivityIndicator, Image, TouchableOpacity, Dimensions, Alert, KeyboardAvoidingView, ScrollView } from 'react-native';
 import Firebase, { db } from '../database/firebase';
 import { FontAwesome5, Feather } from '@expo/vector-icons';
 import normalize from 'react-native-normalize';
@@ -22,7 +22,7 @@ export default class Signup extends Component {
     }
   }
 
-  componentDidMount() {
+  componentDidMount = () => {
     this.setState({
       pickerData: this.phone.getPickerData(),
       validNumber: this.phone.isValidNumber(),
@@ -59,9 +59,11 @@ export default class Signup extends Component {
       return 0;
     }
     else if (this.state.validNumber) {
-      if (mobileType !== "MOBILE")
+      console.log(this.state.mobile)
+      console.log(this.phone.getNumberType())
+      if (mobileType !== "MOBILE" && mobileType !== "FIXED_LINE_OR_MOBILE")
         Alert.alert("Invalid Details!", "Invalid Mobile Number")
-      else
+      else if (mobileType === "MOBILE" || mobileType === "FIXED_LINE_OR_MOBILE")
         this.props.navigation.navigate('OtpVerification', { name: this.state.name, email: this.state.email, mobile: this.state.mobile, password: this.state.password, photoURL: "", emailVerified: false })
     }
   }
@@ -170,8 +172,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: '80%',
     left: '10%',
-    top: "25%",
-    bottom: '10%',
+    top: normalize(140),
     height: normalize(380),
     padding: 25,
     borderColor: '#fff',

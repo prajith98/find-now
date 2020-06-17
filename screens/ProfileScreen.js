@@ -52,7 +52,7 @@ export default class Profile extends React.Component {
         this.getPermissionAsync();
 
     }
-    
+
     componentWillUnmount = () => {
         this.focusListener.remove();
     }
@@ -64,13 +64,14 @@ export default class Profile extends React.Component {
                     await this.setState({
                         name: doc.data().name,
                         email: doc.data().email,
-                        mobile: doc.data().mobile,
-                        newMobile: doc.data().mobile,
+                        mobile: doc.data().mobile.replace('+91', ''),
+                        newMobile: doc.data().mobile.replace('+91', ''),
                         newEmail: doc.data().email,
                         photoUrl: doc.data().photoUrl,
                         gender: doc.data().gender,
                         emailVerified: doc.data().emailVerified,
-                        mobileVerified: doc.data().mobileVerified
+                        mobileVerified: doc.data().mobileVerified,
+                        validNumber: doc.data().mobileVerified
                     },
                         () => {
                             if (this.state.gender == "Male")
@@ -86,7 +87,7 @@ export default class Profile extends React.Component {
                                         this.setState({ emailVerified: true })
                                     })
                                 }
-                            var number = this.state.mobile.slice(0, 5) + "XXXXX" + this.state.mobile.slice(9)
+                            var number = this.state.mobile.slice(0, 4) + "XXXX" + this.state.mobile.slice(8)
                             this.setState({ encMobile: number })
                             var n = this.state.email.indexOf('@')
                             var e = this.state.email.slice(0, 4) + 'x'.repeat(n - 4) + this.state.email.slice(n, this.state.email.length)
@@ -179,7 +180,6 @@ export default class Profile extends React.Component {
         })
     }
     doneEdit = () => {
-        console.log(this.state.newMobile)
         const mobileType = this.phone.getNumberType();
         if (this.state.newMobile == "" || this.state.newEmail == "")
             Alert.alert('', 'Kindly enter your details');
@@ -198,17 +198,20 @@ export default class Profile extends React.Component {
             }
             if (this.state.newEmail != this.state.email) {
                 var user = Firebase.auth().currentUser;
-                user.updateEmail(this.state.newEmail).then(function () {
+                user.updateEmail(this.state.newEmail).then(() => {
                     Alert.alert('Email ID Updated!', 'Kindly verify your new email.')
                     user.sendEmailVerification()
-                    const updateDBRef = db.collection('users').doc(Firebase.auth().currentUser.uid);
-                    updateDBRef.update({
-                        emailVerified: false,
-                    })
-                    this.setState({ emailVerified: false })
-                }).catch(function (error) {
+                }).catch((error) => {
                     console.log(error);
                 });
+                var n = this.state.email.indexOf('@')
+                var e = this.state.newEmail.slice(0, 4) + 'x'.repeat(n - 4) + this.state.newEmail.slice(n, this.state.newEmail.length)
+                db.collection('users')
+                    .doc(user.uid)
+                    .update({
+                        emailVerified: false,
+                        email: this.state.newEmail
+                    }).then(() => this.setState({ emailVerified: false, email: this.state.newEmail, encEmail: e }))
             }
             const updateDBRef = db.collection('users').doc(Firebase.auth().currentUser.uid);
             updateDBRef.update({
