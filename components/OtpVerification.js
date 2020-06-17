@@ -121,6 +121,8 @@ export default class OtpVerification extends Component {
                                     .then(() => this.props.navigation.navigate('App').then(() => this.setState({ loading: false })))
                                     .catch(error => alert("Invalid Email Id or Password"))
                             }
+                            else console.log(error)
+                            this.setState({ loading: false })
                         })
                     Alert.alert("", "Verification Complete!")
                 }

@@ -123,6 +123,7 @@ export default class Login extends Component {
         scopes: ['profile', 'email'],
       });
       if (result.type === 'success') {
+        console.log("in here")
         Firebase.auth()
           .signInWithEmailAndPassword(result.user.email, result.user.photoUrl)
           .then(() => this.props.navigation.navigate('App'))
@@ -214,96 +215,7 @@ export default class Login extends Component {
   managePasswordVisibility = () => {
     this.setState({ hidePassword: !this.state.hidePassword });
   }
-  // signinWithLinkedin = (name, email, photoURL) => {
-  //   if (name != "" && email != null && photoURL != null) {
-  //     Firebase.auth()
-  //       .createUserWithEmailAndPassword(email, photoURL)
-  //       .then((res) => {
-  //         res.user.updateProfile({
-  //           displayName: name,
-  //           photoURL: photoURL
-  //         })
-  //         const user = {
-  //           email: email,
-  //           name: name,
-  //           mobile: "",
-  //           photoUrl: photoURL,
-  //           gender: "Not Set",
-  //           confirmed: false,
-  //           emailVerified: true,
-  //           mobileVerified: false,
-  //         }
 
-  //         db.collection('users')
-  //           .doc(res.user.uid)
-  //           .set(user)
-  //         this.props.navigation.navigate('ConfirmAccount', { email: email, name: name })
-  //       })
-  //       .catch(error => {
-  //         var err = error
-  //         if (err.toString() === "Error: The email address is already in use by another account.") {
-  //           Firebase.auth()
-  //             .signInWithEmailAndPassword(email, photoU)
-  //             .then(() => this.props.navigation.navigate('App'))
-  //             .catch(error => alert("Invalid Email Id or Password"))
-  //         }
-  //       })
-  //   }
-  //   else {
-  //     Alert.alert('Login error', "Please use a different sign-in method")
-  //   }
-  // }
-  // getLinkedinUser = async (data) => {
-  //   const { access_token, authentication_code } = data
-
-  //   if (!authentication_code) {
-  //     this.setState({ refreshing: true })
-
-  //     const response = await fetch('https://api.linkedin.com/v2/me', {
-  //       method: 'GET',
-  //       headers: {
-  //         Authorization: 'Bearer ' + access_token,
-  //       },
-  //     })
-  //     const getEmail = await fetch('https://api.linkedin.com/v2/clientAwareMemberHandles?q=members&projection=(elements*(primary,type,handle~))', {
-  //       method: 'GET',
-  //       headers: {
-  //         Authorization: 'Bearer ' + access_token,
-  //       },
-  //     })
-  //     const getPhotoUrl = await fetch('https://api.linkedin.com/v2/me?projection=(id,profilePicture(displayImage~:playableStreams))', {
-  //       method: 'GET',
-  //       headers: {
-  //         Authorization: 'Bearer ' + access_token,
-  //       },
-  //     })
-  //     const payload = await response.json()
-  //     var name = payload.localizedFirstName + ' ' + payload.localizedLastName;
-  //     const payload2 = await getEmail.json()
-  //     var email = payload2.elements[0]['handle~'].emailAddress
-  //     const payload3 = await getPhotoUrl.json()
-  //     var photoURL = payload3.profilePicture["displayImage~"].elements[3].identifiers[0].identifier
-  //     this.signinWithLinkedin(name, email, photoURL);
-  //     return;
-  //   } else {
-  //     Alert.alert('Login error', "Please use a different sign-in method")
-  //     return;
-  //   }
-  // }
-  // renderLinkedinButton = async () => {
-
-  //   return (
-  //     <TouchableOpacity>
-  //       <Entypo name="linkedin-with-circle" color="#0e76a8" size={45} onPress={() => this.modal.open()} />
-  //     </TouchableOpacity>
-  //   );
-  // };
-  // returnClientId = () => {
-  //   return CLIENT_ID
-  // }
-  // returnClientSecret = () => {
-  //   return CLIENT_SECRET
-  // }
   render() {
     if (this.state.isLoading) {
       return (
@@ -357,20 +269,11 @@ export default class Login extends Component {
             </TouchableOpacity>
             <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginTop: 20 }}>
               <TouchableOpacity>
-                <Entypo name="google--with-circle" color="#EA4335" size={45} onPress={() => this.signInWithGoogleAsync()} />
+                <Entypo name="google--with-circle" color="#EA4335" size={45} onPress={this.signInWithGoogleAsync} />
               </TouchableOpacity>
               <TouchableOpacity>
                 <Entypo name="facebook-with-circle" color="#3b5998" size={45} onPress={this.loginWithFacebook} />
               </TouchableOpacity>
-              {/* <LinkedInModal
-                  ref={ref => { this.modal = ref; }}
-                  renderButton={this.renderLinkedinButton}
-                  clientID={CLIENT_ID}
-                  clientSecret={CLIENT_SECRET}
-                  redirectUri='https://oauth.io/auth'
-                  onSuccess={(token) => this.getLinkedinUser(token)}
-                />
-               */}
             </View>
           </KeyboardAvoidingView>
         </View>

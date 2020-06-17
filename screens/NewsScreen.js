@@ -25,6 +25,7 @@ export default class NewsScreen extends React.Component {
             .catch((error) => {
                 console.error(error)
             })
+        this.setState({ refreshing: false })
     }
     closeHandler = () => {
         this.props.navigation.navigate('HomeScreen')
@@ -69,7 +70,7 @@ export default class NewsScreen extends React.Component {
                                         return (
                                             <TouchableOpacity style={styles.content} key={index} onPress={() => Linking.openURL(value.url)}>
                                                 <View style={{ justifyContent: "center" }}>
-                                                    <Image source={{ uri: value.urlToImage }} style={{ width: normalize(100), height: normalize(100),resizeMode:"cover", borderRadius: 5 }}></Image>
+                                                    <Image source={{ uri: value.urlToImage }} style={{ width: normalize(100), height: normalize(100), resizeMode: "cover", borderRadius: 5 }}></Image>
                                                 </View>
                                                 <View style={{ flex: 1 }}>
                                                     <View>

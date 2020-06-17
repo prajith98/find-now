@@ -7,7 +7,7 @@
       "android",
       "web"
     ],
-    "facebookScheme":"fb669104680580891",
+    "facebookScheme": "fb669104680580891",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/Logo.png",
@@ -19,11 +19,22 @@
     ],
     "ios": {
       "bundleIdentifier": "com.switchtosave.findnow",
-      "buildNumber": "1.0.1"
+      "buildNumber": "1.0.0",
+      "config": {
+        "googleSignIn": {
+          "reserveClientId": "com.googleusercontent.apps.1025260586916-dsndcsfmma0sqvoeb9k0imegbdf9s93a"
+        }
+      }
     },
     "android": {
       "package": "com.switchtosave.findnow",
-      "versionCode": 2
+      "versionCode": 3,
+      "config": {
+        "googleSignIn": {
+          "apiKey": "AIzaSyA_Vrm-kqCaSfrybO9QkHn-WUeniu_HCuU",
+          "certificateHash": "97877278F9F84815DAD1EB8E35B8EFB5502FC629"
+        }
+      }
     }
   }
 }
