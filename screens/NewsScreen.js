@@ -88,7 +88,7 @@ export default class NewsScreen extends React.Component {
                             </View>
                             ) : (
                                     <View style={{ justifyContent: "center", alignItems: "center" }}>
-                                        <ActivityIndicator size="large" color="#0000ff" />
+                                        <ActivityIndicator size="large" color="#e43f5a" />
                                     </View>
                                 )
                         }

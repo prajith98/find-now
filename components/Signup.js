@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ActivityIndicator, Image, TouchableOpacity, Dimensions, Alert, KeyboardAvoidingView, ScrollView } from 'react-native';
-import Firebase, { db } from '../database/firebase';
+import { StyleSheet, Text, View, TextInput, Button, ActivityIndicator, Image, TouchableOpacity, Alert } from 'react-native';
 import { FontAwesome5, Feather } from '@expo/vector-icons';
 import normalize from 'react-native-normalize';
 import PhoneInput from "react-native-phone-input";
 import Modal from 'react-native-modal';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 export default class Signup extends Component {
   constructor() {
     super();
@@ -80,82 +80,84 @@ export default class Signup extends Component {
         <View style={{ alignItems: "center", marginTop: '10%' }}>
           <Image source={require('./images/logo1.png')} style={{ width: normalize(330), height: normalize(60) }}></Image>
         </View>
-        <View style={styles.container}>
-          <KeyboardAvoidingView keyboardShouldPersistTaps='always'>
-            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-              <FontAwesome5 name="user" size={20} color="#581845" style={styles.icon} />
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Name"
-                value={this.state.name}
-                onChangeText={(val) => this.updateInputVal(val, 'name')}
-              />
-            </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-              <FontAwesome5 name="envelope" size={20} color="#581845" style={styles.icon} />
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Email"
-                value={this.state.email}
-                onChangeText={(val) => this.updateInputVal(val, 'email')}
-              />
-            </View>
-            <Text style={{ bottom: normalize(15), textAlign: "right", fontSize: normalize(10), color: "red" }}>{(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) || this.state.email == "" ? "" : "Invalid Email ID"}</Text>
-            <View style={{ flexDirection: "row", justifyContent: "space-around", bottom: normalize(12) }}>
-              <FontAwesome5 name="phone" size={20} color="#581845" style={styles.icon} />
-              <PhoneInput
-                initialCountry="in"
-                textProps={{ placeholder: "Mobile No" }}
-                ref={ref => {
-                  this.phone = ref;
-                }}
-                onChangePhoneNumber={this.updateMobile}
-                style={styles.inputStyle}
-              />
-            </View>
-            <Text style={{ bottom: normalize(25), textAlign: "right", fontSize: normalize(10), color: "red" }}>{this.state.validNumber || this.state.mobile == "" ? "" : "Invalid Mobile Number"}</Text>
-            <View style={{ flexDirection: "row", justifyContent: "space-around", bottom: normalize(18) }}>
-              <FontAwesome5 name="key" size={20} color="#581845" style={styles.icon} />
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Password"
-                value={this.state.password}
-                onChangeText={(val) => this.updateInputVal(val, 'password')}
-                maxLength={15}
-                secureTextEntry={this.state.hidePassword}
-              />
-              <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
-                <Image source={(this.state.hidePassword) ? require('./images/hide.png') : require('./images/view.png')} style={styles.btnImage} />
+        <View style={{ alignItems: "center" }}>
+          <View style={styles.container}>
+            <KeyboardAwareScrollView keyboardShouldPersistTaps='always'>
+              <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+                <FontAwesome5 name="user" size={normalize(20)} color="#581845" style={styles.icon} />
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Name"
+                  value={this.state.name}
+                  onChangeText={(val) => this.updateInputVal(val, 'name')}
+                />
+              </View>
+              <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+                <FontAwesome5 name="envelope" size={normalize(20)} color="#581845" style={styles.icon} />
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Email"
+                  value={this.state.email}
+                  onChangeText={(val) => this.updateInputVal(val, 'email')}
+                />
+              </View>
+              <Text style={{ bottom: normalize(15), textAlign: "right", fontSize: normalize(10), color: "red" }}>{(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.state.email)) || this.state.email == "" ? "" : "Invalid Email ID"}</Text>
+              <View style={{ flexDirection: "row", justifyContent: "space-around", bottom: normalize(7) }}>
+                <FontAwesome5 name="phone" size={normalize(20)} color="#581845" style={{ right: "8%" }} />
+                <PhoneInput
+                  initialCountry="in"
+                  textProps={{ placeholder: "Mobile No" }}
+                  ref={ref => {
+                    this.phone = ref;
+                  }}
+                  onChangePhoneNumber={this.updateMobile}
+                  style={styles.inputStyle}
+                />
+              </View>
+              <Text style={{ bottom: normalize(25), textAlign: "right", fontSize: normalize(10), color: "red" }}>{this.state.validNumber || this.state.mobile == "" ? "" : "Invalid Mobile Number"}</Text>
+              <View style={{ flexDirection: "row", justifyContent: "space-around", bottom: normalize(19) }}>
+                <FontAwesome5 name="key" size={normalize(20)} color="#581845" style={styles.icon} />
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Password"
+                  value={this.state.password}
+                  onChangeText={(val) => this.updateInputVal(val, 'password')}
+                  maxLength={15}
+                  secureTextEntry={this.state.hidePassword}
+                />
+                <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
+                  <Image source={(this.state.hidePassword) ? require('./images/hide.png') : require('./images/view.png')} style={styles.btnImage} />
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity onPress={this.handleSignUp}>
+                <Text style={styles.btnStyle}>SIGN UP</Text>
               </TouchableOpacity>
-            </View>
-            <TouchableOpacity onPress={this.handleSignUp}>
-              <Text style={styles.btnStyle}>SIGN UP</Text>
-            </TouchableOpacity>
-            <View style={{ flexDirection: "row", justifyContent: "center" }}>
-              <Text style={{ fontSize: normalize(12), top: normalize(10) }}>  By signing up you agree to our </Text>
-              <Text onPress={() => this.setState({ t_cVisible: true })} style={{ fontSize: normalize(12), top: normalize(10), textDecorationLine: "underline", fontWeight: "bold", width: "40%" }}>Terms {'&'} Conditions</Text>
-            </View>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')} style={{ marginTop: normalize(25) }}>
-              <Text style={styles.loginText}>
-                Already Registered? Click here to login
+              <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                <Text style={{ fontSize: normalize(12), top: normalize(10) }}>  By signing up you agree to our </Text>
+                <Text onPress={() => this.setState({ t_cVisible: true })} style={{ fontSize: normalize(12), top: normalize(10), textDecorationLine: "underline", fontWeight: "bold", width: "40%" }}>Terms {'&'} Conditions</Text>
+              </View>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')} style={{ marginTop: normalize(25) }}>
+                <Text style={styles.loginText}>
+                  Already Registered? Click here to login
             </Text>
-            </TouchableOpacity>
-          </KeyboardAvoidingView>
-          <View>
-            <Modal isVisible={this.state.t_cVisible}
-              backdropOpacity={0.9}
-              backdropColor="#ccc">
-              <View style={{ alignItems: "center", justifyContent: "center", }}>
-                <View style={styles.modalcontainer}>
-                  <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                    <Text style={{ fontSize: normalize(18), textAlign: "center", fontFamily: "Roboto", fontWeight: "bold" }}>Terms {'&'} Conditions</Text>
-                    <TouchableOpacity onPress={() => this.setState({ t_cVisible: false })}>
-                      <Feather name="x" size={normalize(20)} color="black" style={{ textAlign: "right" }} />
-                    </TouchableOpacity>
+              </TouchableOpacity>
+            </KeyboardAwareScrollView>
+            <View>
+              <Modal isVisible={this.state.t_cVisible}
+                backdropOpacity={0.9}
+                backdropColor="#ccc">
+                <View style={{ alignItems: "center", justifyContent: "center", }}>
+                  <View style={styles.modalcontainer}>
+                    <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                      <Text style={{ fontSize: normalize(18), textAlign: "center", fontFamily: "Roboto", fontWeight: "bold" }}>Terms {'&'} Conditions</Text>
+                      <TouchableOpacity onPress={() => this.setState({ t_cVisible: false })}>
+                        <Feather name="x" size={normalize(20)} color="black" style={{ textAlign: "right" }} />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
-              </View>
-            </Modal>
+              </Modal>
+            </View>
           </View>
         </View>
       </View>
@@ -165,27 +167,25 @@ export default class Signup extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     width: '80%',
-    left: '10%',
-    top: normalize(140),
-    height: normalize(380),
-    padding: 25,
+    top: normalize(40),
+    padding: normalize(25),
+    paddingTop:normalize(30),
+    paddingBottom:normalize(30),
     borderColor: '#fff',
     borderWidth: 5,
     borderRadius: 15,
     backgroundColor: '#fff',
-    position: "absolute",
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     elevation: 15,
   },
   inputStyle: {
+    fontSize: normalize(15),
     width: '85%',
     marginBottom: 15,
     paddingBottom: 15,
@@ -195,7 +195,8 @@ const styles = StyleSheet.create({
   },
   loginText: {
     color: 'grey',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontSize: normalize(14)
   },
   preloader: {
     left: 0,
@@ -223,7 +224,7 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   icon: {
-    marginTop: "2%",
+    top: "2%",
     right: "8%"
   },
 

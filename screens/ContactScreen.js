@@ -73,13 +73,14 @@ const styles = StyleSheet.create({
         justifyContent: "flex-start",
         marginTop: normalize(40),
         backgroundColor: "#f8f3eb",
-        margin: normalize(15)
+        marginLeft: normalize(15),
+        marginRight: normalize(15),
+        bottom:normalize(30)
     },
     header: {
         flexDirection: "row",
         width: "90%",
-        height: windowHeight / 6
-
+        height: windowHeight / 7
     },
     headerText: {
         fontSize: normalize(30),

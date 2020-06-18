@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, ActivityIndicator, TouchableOpacity, Image, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, ActivityIndicator, TouchableOpacity, Image, Keyboard, Alert } from 'react-native';
 import Firebase, { db } from '../database/firebase';
 import { FontAwesome5, Entypo } from '@expo/vector-icons';
 import * as Google from 'expo-google-app-auth';
@@ -8,6 +8,7 @@ import * as Device from 'expo-device';
 import LinkedInModal, { LinkedInToken } from 'react-native-linkedin'
 import normalize from 'react-native-normalize';
 import * as Network from 'expo-network';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 // import Constants from "expo-constants";
 export default class Login extends Component {
 
@@ -198,7 +199,6 @@ export default class Login extends Component {
           .then((res) => {
             oldLog = res.data();
           })
-        console.log(oldLog)
         const curr_log = {
           Device: Device.modelName,
           lastLogIn: lastLogIn,
@@ -229,53 +229,54 @@ export default class Login extends Component {
         <View style={{ alignItems: "center", marginTop: '10%' }}>
           <Image source={require('./images/logo1.png')} style={{ width: normalize(330), height: normalize(60) }}></Image>
         </View>
-        <View style={styles.container}>
-          <KeyboardAvoidingView keyboardShouldPersistTaps='always'>
-            <Text>{'\n\n'}</Text>
-            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-              <FontAwesome5 name="user" size={20} color="#581845" style={styles.icon} />
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Email"
-                value={this.state.email}
-                onChangeText={(val) => this.updateInputVal(val, 'email')}
-              />
-            </View>
-            <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
-              <FontAwesome5 name="key" size={20} color="#581845" style={styles.icon} />
-              <TextInput
-                style={styles.inputStyle}
-                placeholder="Password"
-                value={this.state.password}
-                onChangeText={(val) => this.updateInputVal(val, 'password')}
-                secureTextEntry={this.state.hidePassword}
-              />
-              <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
-                <Image source={(this.state.hidePassword) ? require('./images/hide.png') : require('./images/view.png')} style={styles.btnImage} />
+        <View style={{ alignItems: "center" }}>
+          <View style={styles.container}>
+            <KeyboardAwareScrollView keyboardShouldPersistTaps='always'>
+              <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+                <FontAwesome5 name="user" size={20} color="#581845" style={styles.icon} />
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Email"
+                  value={this.state.email}
+                  onChangeText={(val) => this.updateInputVal(val, 'email')}
+                />
+              </View>
+              <View style={{ flexDirection: "row", justifyContent: "space-around" }}>
+                <FontAwesome5 name="key" size={20} color="#581845" style={styles.icon} />
+                <TextInput
+                  style={styles.inputStyle}
+                  placeholder="Password"
+                  value={this.state.password}
+                  onChangeText={(val) => this.updateInputVal(val, 'password')}
+                  secureTextEntry={this.state.hidePassword}
+                />
+                <TouchableOpacity activeOpacity={0.8} style={styles.visibilityBtn} onPress={this.managePasswordVisibility}>
+                  <Image source={(this.state.hidePassword) ? require('./images/hide.png') : require('./images/view.png')} style={styles.btnImage} />
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity style={{ bottom: "2%" }} onPress={() => this.props.navigation.navigate('ResetPassword')}>
+                <Text style={{ textAlign: "right" }}>Forgot Password?</Text>
               </TouchableOpacity>
-            </View>
-            <TouchableOpacity style={{ bottom: "2%" }} onPress={() => this.props.navigation.navigate('ResetPassword')}>
-              <Text style={{ textAlign: "right" }}>Forgot Password?</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={this.handleLogin}>
-              <Text style={styles.btnStyle}>LOG IN</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('Signup')}>
-              <Text
-                style={styles.loginText}
-              >
-                Don't have account? Signup
+              <TouchableOpacity onPress={this.handleLogin}>
+                <Text style={styles.btnStyle}>LOG IN</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => this.props.navigation.navigate('Signup')}>
+                <Text
+                  style={styles.loginText}
+                >
+                  Don't have account? Signup
             </Text>
-            </TouchableOpacity>
-            <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginTop: 20 }}>
-              <TouchableOpacity>
-                <Entypo name="google--with-circle" color="#EA4335" size={45} onPress={this.signInWithGoogleAsync} />
               </TouchableOpacity>
-              <TouchableOpacity>
-                <Entypo name="facebook-with-circle" color="#3b5998" size={45} onPress={this.loginWithFacebook} />
-              </TouchableOpacity>
-            </View>
-          </KeyboardAvoidingView>
+              <View style={{ flexDirection: "row", justifyContent: "space-evenly", marginTop: 20 }}>
+                <TouchableOpacity>
+                  <Entypo name="google--with-circle" color="#EA4335" size={45} onPress={this.signInWithGoogleAsync} />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Entypo name="facebook-with-circle" color="#3b5998" size={45} onPress={this.loginWithFacebook} />
+                </TouchableOpacity>
+              </View>
+            </KeyboardAwareScrollView>
+          </View>
         </View>
       </View>
     );
@@ -284,27 +285,25 @@ export default class Login extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     width: '80%',
-    left: '10%',
-    top: normalize(140),
-    height: normalize(380),
-    padding: 25,
+    top: normalize(50),
+    padding: normalize(25),
+    paddingTop:normalize(50),
+    paddingBottom:normalize(40),
     borderColor: '#fff',
     borderWidth: 5,
     borderRadius: 15,
     backgroundColor: '#fff',
-    position: "absolute",
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     elevation: 15,
   },
   inputStyle: {
+    fontSize: normalize(15),
     width: '85%',
     marginBottom: 15,
     paddingBottom: 15,
@@ -330,10 +329,10 @@ const styles = StyleSheet.create({
   visibilityBtn:
   {
     position: 'absolute',
-    right: 3,
-    height: 40,
-    width: 35,
-    padding: 5
+    right: normalize(3),
+    height: normalize(30),
+    width: normalize(30),
+    padding: normalize(5)
   },
 
   btnImage:
@@ -349,7 +348,7 @@ const styles = StyleSheet.create({
   btnStyle: {
     backgroundColor: "#f40552",
     textAlign: "center",
-    height: 35,
+    height: normalize(35),
     textAlignVertical: "center",
     color: "white",
     fontFamily: "Roboto",

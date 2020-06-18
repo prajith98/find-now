@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Dimensions, ActivityIndicator } from 'react-native';
 import { Feather } from '@expo/vector-icons'
 import Firebase, { db } from '../database/firebase'
 import normalize from 'react-native-normalize';
@@ -13,9 +13,11 @@ export default class UserDeviceLog extends React.Component {
         this.state = {
             tableHead: ["Sr No.", "Device Name", "IP Address", "Last Login"],
             tableData: [],
+            loading: false
         }
     }
     componentDidMount = async () => {
+        this.setState({ loading: true })
         const dbRef = db.collection('device_log').doc(Firebase.auth().currentUser.uid)
         var table = []
         var t_title = []
@@ -29,7 +31,7 @@ export default class UserDeviceLog extends React.Component {
                     table.push(curr)
                 })
             })
-        this.setState({ tableData: table })
+        this.setState({ tableData: table, loading: false })
     }
     render() {
         return (
@@ -45,21 +47,29 @@ export default class UserDeviceLog extends React.Component {
                             </TouchableOpacity>
                         </View>
                         <View style={{ width: "100%", height: windowHeight - (windowHeight / 8) }}>
-                            <Table >
-                                <Row data={this.state.tableHead} flexArr={[0.5, 1, 1, 1]} style={styles.head} textStyle={styles.text, { color: "white", paddingLeft: normalize(10)}} />
-                                <Table>
-                                    {
-                                        this.state.tableData.map((rowData, index) => (
-                                            <Row
-                                                key={index}
-                                                data={rowData}
-                                                flexArr={[0.5, 1, 1, 1]}
-                                                style={[styles.row, !(index % 2) && { backgroundColor: 'white' }]}
-                                                textStyle={styles.text}
-                                            />
-                                        ))
-                                    }
-                                </Table>
+                            <Table borderstyle={{ borderWidth: 1 }}>
+                                <Row data={this.state.tableHead} flexArr={[0.5, 1, 1, 1]} style={styles.head} textStyle={styles.text, { color: "white", paddingLeft: normalize(10) }} />
+                                {this.state.loading ? (
+                                    <View style={{ flex: 1, justifyContent: "center", alignItems: "center", top: normalize(30) }}>
+                                        <ActivityIndicator size="large" color="#de0647" />
+                                    </View>
+                                )
+                                    : (
+                                        <Table>
+                                            {
+                                                this.state.tableData.map((rowData, index) => (
+                                                    <Row
+                                                        key={index}
+                                                        data={rowData}
+                                                        flexArr={[0.4, 1, 1, 1]}
+                                                        style={[styles.row, !(index % 2) && { backgroundColor: 'white' }]}
+                                                        textStyle={styles.text}
+                                                    />
+                                                ))
+                                            }
+                                        </Table>
+                                    )
+                                }
                             </Table>
                         </View>
                     </View>

@@ -12,6 +12,7 @@ import History from './History';
 import ScheduleScreen from './ScheduleScreen';
 import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
+import PieChart from 'react-native-pie-chart';
 export default class CalculatorScreen extends React.Component {
     constructor(props) {
         super(props)
@@ -46,6 +47,7 @@ export default class CalculatorScreen extends React.Component {
             displaySchedule: false,
             currentPage: true,
             tenureMode: false,
+            calculation: [],
         }
     }
     componentDidMount = () => {
@@ -79,7 +81,7 @@ export default class CalculatorScreen extends React.Component {
         try {
             await Share.share({
                 message:
-                    "Loan : " + paisa.formatWithSymbol(this.state.Loan * 100,0) + "\nRate : " + this.state.Rate + "%\nTenure : " + this.state.Tenure + " Months\nEMI: " + paisa.formatWithSymbol(this.state.EMI * 100,0),
+                    "Loan : " + paisa.formatWithSymbol(this.state.Loan * 100, 0) + "\nRate : " + this.state.Rate + "%\nTenure : " + this.state.Tenure + " Months\nEMI: " + paisa.formatWithSymbol(this.state.EMI * 100, 0),
             })
         }
         catch (snapshotError) {
@@ -370,11 +372,12 @@ export default class CalculatorScreen extends React.Component {
         var num = (E) / (E - (L * R))
         var dum = 1 + R;
         var T = (Math.log(num) / Math.log(dum)).toFixed(2).toString()
-        if (!isNaN(T))
+        if (!isNaN(T)) {
             this.setState({
                 Tenure: T
             })
-        this.calculateInterest(E, T, L)
+            this.calculateInterest(E, T, L)
+        }
         return T
     }
     calculateEMI = (Loan, Rate, Tenure) => {
@@ -395,6 +398,10 @@ export default class CalculatorScreen extends React.Component {
         return E
     }
     calculateInterest = (EMI, Tenure, Loan) => {
+        var series = []
+        series.push(Math.round(EMI * Tenure - Loan));
+        series.push(Number(Loan))
+        this.setState({ calculation: series })
         this.setState({
             Interest: paisa.formatWithSymbol(Math.round(EMI * Tenure - Loan) * 100, 0),
             totalPayment: paisa.formatWithSymbol(Math.round(EMI * Tenure) * 100, 0)
@@ -506,6 +513,7 @@ export default class CalculatorScreen extends React.Component {
     }
     closeHandler = () => {
         this.resetHandler();
+        Keyboard.dismiss();
         this.props.navigation.navigate('HomeScreen')
     }
     onBackPress = () => {
@@ -520,153 +528,182 @@ export default class CalculatorScreen extends React.Component {
         return true;
     }
     render() {
+        const chart_wh = 210
+        const sliceColor = ['#e43f5a', '#FFEB3B'];
         if (!this.state.displaySchedule)
             return (
-                <View style={styles.container} ref={view => { this._container = view; }}>
-                    <SafeAreaView style={{ flex: 1 }}>
-                        <View style={{ alignItems: "center" }}>
-                            <View style={styles.header}>
-                                {
-                                    this.state.historyMode ? (
-                                        <TouchableOpacity style={{ justifyContent: "center", paddingRight: normalize(10) }} onPress={() => this.setState({ historyMode: false })}>
-                                            <Ionicons name="md-arrow-round-back" size={normalize(30)} color="black" />
-                                        </TouchableOpacity>
-                                    )
-                                        : null
-                                }
-                                <View style={{ flex: 1, alignItems: "flex-start", justifyContent: "center" }}>
-                                    <Text style={styles.headerText}>{this.props.name}</Text>
-                                </View>
-                                {
-                                    !this.state.historyMode ? (
-                                        <TouchableOpacity style={{ justifyContent: "center" }} onPress={() => this.setState({ historyMode: true })}>
-                                            <MaterialCommunityIcons name="history" size={normalize(30)} color="black" />
-                                        </TouchableOpacity>
-                                    )
-                                        : null
-                                }
-                                <TouchableOpacity style={{ justifyContent: "center" }} onPress={this.closeHandler}>
-                                    <Feather name="x" size={normalize(30)} color="black" />
-                                </TouchableOpacity>
+                <SafeAreaView style={styles.container} ref={view => { this._container = view; }} >
+                    <View style={{ alignItems: "center" }}>
+                        <View style={styles.header}>
+                            {
+                                this.state.historyMode ? (
+                                    <TouchableOpacity style={{ justifyContent: "center", paddingRight: normalize(10) }} onPress={() => this.setState({ historyMode: false })}>
+                                        <Ionicons name="md-arrow-round-back" size={normalize(30)} color="black" />
+                                    </TouchableOpacity>
+                                )
+                                    : null
+                            }
+                            <View style={{ flex: 1, alignItems: "flex-start", justifyContent: "center" }}>
+                                <Text style={styles.headerText}>{this.props.name}</Text>
                             </View>
+                            {
+                                !this.state.historyMode ? (
+                                    <TouchableOpacity style={{ justifyContent: "center" }} onPress={() => this.setState({ historyMode: true })}>
+                                        <MaterialCommunityIcons name="history" size={normalize(30)} color="black" />
+                                    </TouchableOpacity>
+                                )
+                                    : null
+                            }
+                            <TouchableOpacity style={{ justifyContent: "center" }} onPress={this.closeHandler}>
+                                <Feather name="x" size={normalize(30)} color="black" />
+                            </TouchableOpacity>
                         </View>
-                        {
-                            this.state.historyMode ?
-                                <History val={this.props.name} />
-                                :
-                                (
-                                    <KeyboardAwareScrollView keyboardShouldPersistTaps="always" contentContainerStyle={{ height: (windowHeight - (windowHeight / 7)) }}>
+                    </View>
+                    {
+                        this.state.historyMode ?
+                            <History val={this.props.name} />
+                            :
+                            (
+                                <KeyboardAwareScrollView keyboardShouldPersistTaps="always" >
 
-                                        <View style={styles.body}>
-                                            <View style={{ width: "85%" }}>
-                                                <View style={styles.radioCategory}>
-                                                    <RadioForm
-                                                        buttonSize={10}
-                                                        initial={this.state.calc}
-                                                        formHorizontal={true}
-                                                    >
-                                                        {
-                                                            this.state.radio_props.map((obj, i) => (
-                                                                <RadioButton labelHorizontal={true} key={i} >
-                                                                    <RadioButtonInput
-                                                                        obj={obj}
-                                                                        index={i}
-                                                                        isSelected={this.state.calc === i}
-                                                                        onPress={val => this.radioCall(val)}
-                                                                        borderWidth={1}
-                                                                        buttonInnerColor={'#e74c3c'}
-                                                                        buttonOuterColor={this.state.calc === i ? '#2196f3' : '#000'}
-                                                                        buttonSize={10}
-                                                                        buttonOuterSize={16}
-                                                                        buttonStyle={{}}
-                                                                        buttonWrapStyle={{ marginLeft: 10, paddingTop: 2 }}
-                                                                    />
-                                                                    <RadioButtonLabel
-                                                                        obj={obj}
-                                                                        index={i}
-                                                                        onPress={val => this.radioCall(val)}
-                                                                        labelHorizontal={true}
-                                                                        labelStyle={{ fontSize: normalize(20), color: 'black', paddingTop: 3 }}
-                                                                        labelWrapStyle={{}}
-                                                                    />
-                                                                </RadioButton>
-                                                            ))
-                                                        }
-                                                    </RadioForm>
+                                    <View style={styles.body}>
+                                        <View style={{ width: "85%" }}>
+                                            <View style={styles.radioCategory}>
+                                                <RadioForm
+                                                    buttonSize={10}
+                                                    initial={this.state.calc}
+                                                    formHorizontal={true}
+                                                >
+                                                    {
+                                                        this.state.radio_props.map((obj, i) => (
+                                                            <RadioButton labelHorizontal={true} key={i} >
+                                                                <RadioButtonInput
+                                                                    obj={obj}
+                                                                    index={i}
+                                                                    isSelected={this.state.calc === i}
+                                                                    onPress={val => this.radioCall(val)}
+                                                                    borderWidth={1}
+                                                                    buttonInnerColor={'#e74c3c'}
+                                                                    buttonOuterColor={this.state.calc === i ? '#2196f3' : '#000'}
+                                                                    buttonSize={10}
+                                                                    buttonOuterSize={16}
+                                                                    buttonStyle={{}}
+                                                                    buttonWrapStyle={{ marginLeft: 10, paddingTop: 2 }}
+                                                                />
+                                                                <RadioButtonLabel
+                                                                    obj={obj}
+                                                                    index={i}
+                                                                    onPress={val => this.radioCall(val)}
+                                                                    labelHorizontal={true}
+                                                                    labelStyle={{ fontSize: normalize(20), color: 'black', paddingTop: 3 }}
+                                                                    labelWrapStyle={{}}
+                                                                />
+                                                            </RadioButton>
+                                                        ))
+                                                    }
+                                                </RadioForm>
+                                            </View>
+                                        </View>
+                                        <View style={{ width: '95%', alignItems: "center", justifyContent: "center", height: normalize(220), right: normalize(5), top: normalize(5) }}>
+                                            <View style={{ width: '100%', height: "24%" }}>
+                                                <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.Loan != "" ? "Loan" : ""}</Text>
+                                                <View style={{ alignItems: "center", bottom: normalize(25) }}>
+                                                    <View style={styles.combo2}>
+                                                        <MaterialCommunityIcons name="sack" size={20} color="#FFA62F" style={{ top: "4%" }} />
+                                                        <TextInput placeholder={this.state.loanPlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.loanInputHandler} value={this.state.Loan != "" ? (paisa.format(Number(this.state.Loan) * 100, 0)) : ""} editable={this.state.loanTextInputVisible}></TextInput>
+                                                    </View>
+                                                </View>
+                                                <Text style={{ fontSize: normalize(11), textAlign: "right", bottom: "60%", left: "13%", paddingTop: 3, width: "81%" }}>{this.state.loanInWords}</Text>
+                                            </View>
+                                            <View style={{ width: '100%', height: "24%" }}>
+                                                <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.Rate != "" ? "Rate" : ""}</Text>
+                                                <View style={{ alignItems: "center", bottom: normalize(25) }}>
+                                                    <View style={styles.combo2}>
+                                                        <Feather name="percent" size={20} color="red" style={{ top: "4%" }} />
+                                                        <TextInput placeholder={this.state.ratePlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.rateInputHandler} value={this.state.Rate} editable={this.state.rateTextInputVisible}></TextInput>
+                                                        <Text style={{ fontSize: normalize(20), right: "55%", top: normalize(7) }}>p.a</Text>
+                                                    </View>
                                                 </View>
                                             </View>
-                                            <View style={{ width: '95%', alignItems: "center", justifyContent: "center", height: normalize(220), right: normalize(5), top: normalize(5) }}>
-                                                <View style={{ width: '100%', height: "24%" }}>
-                                                    <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.Loan != "" ? "Loan" : ""}</Text>
-                                                    <View style={{ alignItems: "center", bottom: normalize(25) }}>
-                                                        <View style={styles.combo2}>
-                                                            <MaterialCommunityIcons name="sack" size={20} color="#FFA62F" style={{ top: "4%" }} />
-                                                            <TextInput placeholder={this.state.loanPlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.loanInputHandler} value={this.state.Loan != "" ? (paisa.format(Number(this.state.Loan) * 100, 0)) : ""} editable={this.state.loanTextInputVisible}></TextInput>
+                                            <View style={{ width: '100%', height: "24%" }}>
+                                                <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.Tenure != "" ? "Tenure" : ""}</Text>
+                                                <View style={{ alignItems: "center", bottom: normalize(25) }}>
+                                                    <View style={styles.combo2}>
+                                                        <Feather name="clock" size={20} color="red" style={{ top: "4%" }} />
+                                                        <TextInput placeholder={this.state.tenurePlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.tenureInputHandler} value={!this.state.tenureTextInputVisible ? (this.state.Tenure != "" ? (!this.state.tenureMode ? this.state.Tenure : (parseFloat(this.state.Tenure) / 12).toFixed(2)) : "") : this.state.Tenure} editable={this.state.tenureTextInputVisible}></TextInput>
+                                                        <View style={{ top: normalize(5), backgroundColor: "white", borderColor: "#E7E7E7", borderRadius: normalize(50), right: normalize(60), justifyContent: "space-evenly", alignItems: "center", flexDirection: "row", borderWidth: 2, width: normalize(60), height: normalize(25) }}>
+                                                            <TouchableOpacity style={[styles.switchBtn, { borderWidth: !this.state.tenureMode ? 1 : 0, backgroundColor: !this.state.tenureMode ? "#e43f5a" : null }]} onPress={this.toggleTenure}>
+                                                                <Text style={{ textAlign: "center", color: !this.state.tenureMode ? "white" : null, fontWeight: "bold" }}>M</Text>
+                                                            </TouchableOpacity>
+                                                            <TouchableOpacity style={[styles.switchBtn, { borderWidth: this.state.tenureMode ? 1 : 0, backgroundColor: this.state.tenureMode ? "#e43f5a" : null }]} onPress={this.toggleTenure}>
+                                                                <Text style={{ textAlign: "center", color: this.state.tenureMode ? "white" : null, fontWeight: "bold" }}>Y</Text>
+                                                            </TouchableOpacity>
                                                         </View>
                                                     </View>
-                                                    <Text style={{ fontSize: normalize(11), textAlign: "right", bottom: "60%", left: "13%", paddingTop: 3, width: "81%" }}>{this.state.loanInWords}</Text>
-                                                </View>
-                                                <View style={{ width: '100%', height: "24%" }}>
-                                                    <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.Rate != "" ? "Rate" : ""}</Text>
-                                                    <View style={{ alignItems: "center", bottom: normalize(25) }}>
-                                                        <View style={styles.combo2}>
-                                                            <Feather name="percent" size={20} color="red" style={{ top: "4%" }} />
-                                                            <TextInput placeholder={this.state.ratePlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.rateInputHandler} value={this.state.Rate} editable={this.state.rateTextInputVisible}></TextInput>
-                                                            <Text style={{ fontSize: normalize(20), right: "55%", top: normalize(7) }}>p.a</Text>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                                <View style={{ width: '100%', height: "24%" }}>
-                                                    <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.Tenure != "" ? "Tenure" : ""}</Text>
-                                                    <View style={{ alignItems: "center", bottom: normalize(25) }}>
-                                                        <View style={styles.combo2}>
-                                                            <Feather name="clock" size={20} color="red" style={{ top: "4%" }} />
-                                                            <TextInput placeholder={this.state.tenurePlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.tenureInputHandler} value={!this.state.tenureTextInputVisible ? (this.state.Tenure != "" ? (!this.state.tenureMode ? this.state.Tenure : (parseFloat(this.state.Tenure) / 12).toFixed(2)) : "") : this.state.Tenure} editable={this.state.tenureTextInputVisible}></TextInput>
-                                                            <View style={{ top: normalize(5), backgroundColor: "white", borderColor: "#E7E7E7", borderRadius: normalize(50), right: normalize(60), justifyContent: "space-evenly", alignItems: "center", flexDirection: "row", borderWidth: 2, width: normalize(60), height: normalize(25) }}>
-                                                                <TouchableOpacity style={[styles.switchBtn, { borderWidth: !this.state.tenureMode ? 1 : 0, backgroundColor: !this.state.tenureMode ? "#e43f5a" : null }]} onPress={this.toggleTenure}>
-                                                                    <Text style={{ textAlign: "center", color: !this.state.tenureMode ? "white" : null, fontWeight: "bold" }}>M</Text>
-                                                                </TouchableOpacity>
-                                                                <TouchableOpacity style={[styles.switchBtn, { borderWidth: this.state.tenureMode ? 1 : 0, backgroundColor: this.state.tenureMode ? "#e43f5a" : null }]} onPress={this.toggleTenure}>
-                                                                    <Text style={{ textAlign: "center", color: this.state.tenureMode ? "white" : null, fontWeight: "bold" }}>Y</Text>
-                                                                </TouchableOpacity>
-                                                            </View>
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                                <View style={{ width: '100%', height: "24%" }}>
-                                                    <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.EMI != "" ? "EMI" : ""}</Text>
-                                                    <View style={{ alignItems: "center", bottom: normalize(25) }}>
-                                                        <View style={styles.combo2}>
-                                                            <FontAwesome5 name="coins" size={20} color="#FFA62F" style={{ top: "4%" }} />
-                                                            <TextInput placeholder={this.state.emiPlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.emiInputHandler} value={this.state.EMI != "" ? (paisa.format(Number(this.state.EMI) * 100, 0)) : ""} editable={this.state.emiTextInputVisible}></TextInput>
-                                                        </View>
-                                                    </View>
-                                                    <Text style={{ fontSize: normalize(11), textAlign: "right", bottom: "60%", left: "13%", paddingTop: 3, width: "81%" }}>{this.state.emiInWords}</Text>
                                                 </View>
                                             </View>
-
-                                            <View style={{ flexDirection: "row", width: '80%', alignItems: "center", justifyContent: "space-around" }}>
-                                                <View style={{ width: "45%", padding: 10, }}>
-                                                    <Button title="Reset" color="#e43f5a" onPress={this.resetHandler}></Button>
+                                            <View style={{ width: '100%', height: "24%" }}>
+                                                <Text style={{ width: "15%", left: normalize(54), bottom: normalize(12), color: "grey" }} >{this.state.EMI != "" ? "EMI" : ""}</Text>
+                                                <View style={{ alignItems: "center", bottom: normalize(25) }}>
+                                                    <View style={styles.combo2}>
+                                                        <FontAwesome5 name="coins" size={20} color="#FFA62F" style={{ top: "4%" }} />
+                                                        <TextInput placeholder={this.state.emiPlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.emiInputHandler} value={this.state.EMI != "" ? (paisa.format(Number(this.state.EMI) * 100, 0)) : ""} editable={this.state.emiTextInputVisible}></TextInput>
+                                                    </View>
                                                 </View>
-                                                <View style={{ width: "45%", padding: 10, }}>
-                                                    <Button title="Calculate" color="#00bcd4" onPress={this.calculateHandler}></Button>
-                                                </View>
+                                                <Text style={{ fontSize: normalize(11), textAlign: "right", bottom: "60%", left: "13%", paddingTop: 3, width: "81%" }}>{this.state.emiInWords}</Text>
                                             </View>
                                         </View>
 
+                                        <View style={{ flexDirection: "row", width: '80%', alignItems: "center", justifyContent: "space-around" }}>
+                                            <View style={{ width: "45%", padding: 10, }}>
+                                                <Button title="Reset" color="#e43f5a" onPress={this.resetHandler}></Button>
+                                            </View>
+                                            <View style={{ width: "45%", padding: 10, }}>
+                                                <Button title="Calculate" color="#00bcd4" onPress={this.calculateHandler}></Button>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    <View style={this.state.Interest != "" ? { height: windowHeight / 1.7 } : { height: 0 }}>
                                         {
                                             this.state.Interest != "" ? (
                                                 <View style={{ alignItems: "center", top: normalize(20) }}>
-                                                    <View style={{ height: normalize(70), width: normalize(320), flexDirection: "row", justifyContent: "center" }}>
+                                                    <PieChart
+                                                        chart_wh={chart_wh}
+                                                        series={this.state.calculation}
+                                                        sliceColor={sliceColor}
+                                                        doughnut={true}
+                                                        coverRadius={0.45}
+                                                        coverFill={'#FFF'}
+                                                        withVerticalLabels={false}
+                                                        withHorizontalLabels={false}
+                                                    />
+                                                </View>
+                                            ) : null
+                                        }
+                                        {
+                                            this.state.Interest != "" ? (
+                                                <View style={{ alignItems: "center", top: normalize(20) }}>
+                                                    <View style={{ height: normalize(70), width: normalize(360), flexDirection: "row", justifyContent: "center" }}>
                                                         <View style={[styles.solution, { borderRightWidth: 0.5, borderColor: 'grey' }]}>
                                                             <Text style={styles.solText}>Total Interest</Text>
-                                                            <Text style={styles.solText}>{this.state.Interest}</Text>
+                                                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                <Text style={{ color: "#e43f5a", fontSize: normalize(25) }}>⬤ </Text>
+                                                                <Text style={styles.solText}>{this.state.Interest}</Text>
+                                                            </View>
                                                         </View>
-                                                        <Divider />
+                                                        <View style={[styles.solution, { borderRightWidth: 0.5, borderColor: 'grey' }]}>
+                                                            <Text style={styles.solText}>Principal</Text>
+                                                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                <Text style={{ color: "#FFEB3B", fontSize: normalize(25) }}>⬤ </Text>
+                                                                <Text style={styles.solText}>{paisa.formatWithSymbol(this.state.Loan * 100, 0)}</Text>
+                                                            </View>
+                                                        </View>
                                                         <View style={styles.solution} >
                                                             <Text style={styles.solText}>Total Payment</Text>
-                                                            <Text style={styles.solText}>{this.state.totalPayment}</Text>
+                                                            <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                                <Text style={{ color: "#f8f3eb", fontSize: normalize(25) }}> </Text>
+                                                                <Text style={styles.solText}>{this.state.totalPayment}</Text>
+                                                            </View>
                                                         </View>
                                                     </View>
                                                 </View>
@@ -689,16 +726,16 @@ export default class CalculatorScreen extends React.Component {
                                             ) : null
                                         }
 
-                                    </KeyboardAwareScrollView>
-                                )
-                        }
+                                    </View>
+                                </KeyboardAwareScrollView>
+                            )
+                    }
 
-                    </SafeAreaView>
-                </View>
+                </SafeAreaView>
             )
         else
             return (
-                <ScheduleScreen Loan={Number(this.state.Loan.replace(/,/g, '').replace('₹', ''))} EMI={Number(this.state.EMI.replace(/,/g, '').replace('₹', ''))} Tenure={Number(this.state.Tenure)} Rate={Number(this.state.Rate)} getBack={this.hideRepaymentSchedule} />
+                <ScheduleScreen Loan={Number(this.state.Loan.replace(/,/g, '').replace('₹', ''))} EMI={Number(this.state.EMI.replace(/,/g, '').replace('₹', ''))} Tenure={this.state.tenureMode ? Number(this.state.Tenure) * 12 : Number(this.state.Tenure)} Rate={Number(this.state.Rate)} getBack={this.hideRepaymentSchedule} />
             )
     }
 }
