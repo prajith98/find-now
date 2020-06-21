@@ -29,7 +29,6 @@ export default class HomeScreen extends React.Component {
         });
         const value = await AsyncStorage.getItem("LogKey");
         const stat = JSON.parse(value).status
-        console.log("stat" + stat)
         stat ? this.setState({ displayHead: "Welcome, " }) : null
         stat ? this.setState({ displayStatus: "Hope you and your family are doing well" }) : null
     }

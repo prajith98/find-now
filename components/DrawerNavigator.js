@@ -11,15 +11,16 @@ import LPScreen from '../screens/LPScreen'
 import SideBar from '../components/SideBar'
 import HomeScreen from '../screens/HomeScreen'
 import BankScreen from '../screens/BankScreen'
-import ProfileStack from '../screens/ProfileSection';
-import ScheduleScreen from '../screens/ScheduleScreen';
-import { LoanScreen, EMIScreen, RateScreen, TenureScreen } from '../screens';
-import MCCStack from '../screens/MCCSection';
+import ProfileStack from '../screens/Profile/ProfileSection';
+import ScheduleScreen from '../screens/Calculator/ScheduleScreen';
+import EMIStack from '../screens/Calculator/EMIStack';
+import LoanStack from '../screens/Calculator/LoanStack.js';
+import RateStack from '../screens/Calculator/RateStack';
+import TenureStack from '../screens/Calculator/TenureStack';
+import MCCStack from '../screens/Moratorium/MCCSection';
 import FeedBackScreen from '../screens/FeedbackScreen'
-import CompareLoanStack from '../screens/CompareLoanStack';
+import CompareLoanStack from '../screens/Compare Loan/CompareLoanStack';
 import UserDeviceLog from '../screens/UserDeviceLog'
-import CLScreen2 from '../screens/CLScreen2';
-import CompareLoanStack2 from '../screens/CompareLoanStack2';
 import normalize from 'react-native-normalize';
 const { windowWidth, windowHeight } = Dimensions.get('window');
 class Hidden extends React.Component {
@@ -51,28 +52,28 @@ const DrawerNavigator = createDrawerNavigator({
         }
     },
     EMIScreen: {
-        screen: EMIScreen,
+        screen: EMIStack,
         navigationOptions: {
             drawerIcon: ({ tintColor }) => <FontAwesome5 name="calculator" size={16} color={tintColor} />,
             drawerLabel: () => <Text style={styles.label}>EMI Calculator</Text>
         }
     },
     LoanScreen: {
-        screen: LoanScreen,
+        screen: LoanStack,
         navigationOptions: {
             drawerIcon: ({ tintColor }) => <MaterialCommunityIcons name="sack" size={16} color={tintColor} />,
             drawerLabel: () => <Text style={styles.label}>Loan Eligibility Check</Text>
         }
     },
     RateScreen: {
-        screen: RateScreen,
+        screen: RateStack,
         navigationOptions: {
             drawerIcon: ({ tintColor }) => <Feather name="percent" size={16} color={tintColor} />,
             drawerLabel: () => <Text style={styles.label}>Interest Rate Calculator</Text>
         }
     },
     TenureScreen: {
-        screen: TenureScreen,
+        screen: TenureStack,
         navigationOptions: {
             drawerIcon: ({ tintColor }) => <Feather name="clock" size={16} color={tintColor} />,
             drawerLabel: () => <Text style={styles.label}>Tenure Calculator</Text>

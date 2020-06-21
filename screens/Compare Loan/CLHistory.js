@@ -79,13 +79,10 @@ export default class CLHistory extends Component {
             <View style={styles.container}>
                 <SafeAreaView style={{ flex: 1, alignItems: "center" }}>
                     <View style={styles.header}>
-                        <TouchableOpacity style={{ justifyContent: "center", paddingRight: normalize(10) }} onPress={() => this.props.navigation.navigate('CLScreen')}>
-                            <Ionicons name="md-arrow-round-back" size={normalize(30)} color="black" />
-                        </TouchableOpacity>
                         <View style={{ flex: 1, alignItems: "flex-start", justifyContent: "center", padding: normalize(15) }}>
                             <Text style={styles.headerText}>Compare Loan</Text>
                         </View>
-                        <TouchableOpacity style={{ justifyContent: "center", marginRight: normalize(10) }} onPress={() => this.props.navigation.navigate('HomeScreen')}>
+                        <TouchableOpacity style={{ justifyContent: "center", marginRight: normalize(10) }} onPress={() => this.props.navigation.goBack()}>
                             <Feather name="x" size={34} color="black" />
                         </TouchableOpacity>
                     </View>
@@ -123,7 +120,7 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: "row",
-        width: "90%",
+        width: "95%",
         height: windowHeight / 6,
     },
     headerText: {

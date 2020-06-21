@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Dimensions, StyleSheet, Text, View, Image, TouchableOpacity, KeyboardAvoidingView, Alert, BackHandler } from 'react-native';
-import Firebase, { db } from '../database/firebase';
+import Firebase, { db } from '../../database/firebase';
 import { RFValue } from "react-native-responsive-fontsize";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
@@ -101,7 +101,7 @@ export default class OtpVerifyScreen extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: "#f8f3eb" }}>
                 <View style={{ alignItems: "center", marginTop: '10%' }}>
-                    <Image source={require('../components/images/logo1.png')} style={{ width: normalize(330), height: normalize(60) }}></Image>
+                    <Image source={require('../../components/images/logo1.png')} style={{ width: normalize(330), height: normalize(60) }}></Image>
                 </View>
                 <View style={{ alignItems: "center", height: normalize(230), top: "5%" }}>
                     <View style={styles.container}>

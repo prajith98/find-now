@@ -9,7 +9,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Constants from 'expo-constants';
 import * as Permissions from 'expo-permissions';
 import { YellowBox } from 'react-native';
-import Firebase, { db } from '../database/firebase'
+import Firebase, { db } from '../../database/firebase'
 import RadioForm from 'react-native-simple-radio-button';
 import normalize from 'react-native-normalize';
 import PhoneInput from "react-native-phone-input";
@@ -274,10 +274,10 @@ export default class Profile extends React.Component {
                             centerComponent={
                                 <View style={{ justifyContent: "center", alignItems: "center", top: "4%", width: "70%" }}>
                                     {this.state.photoAvailable ? (<Image source={{ uri: this.state.photoUrl }} style={styles.profile} />)
-                                        : (<Image source={require("../assets/profile-pic.png")} style={styles.profile} />)
+                                        : (<Image source={require("../../assets/profile-pic.png")} style={styles.profile} />)
                                     }
                                     <TouchableOpacity onPress={() => this.RBSheet.open()} style={{ left: normalize(45), bottom: normalize(40), width: normalize(45), height: normalize(45), borderRadius: normalize(50), justifyContent: "center", alignItems: "center", backgroundColor: "#15D29D" }}>
-                                        <Image source={require("../assets/photograph.png")} style={{ resizeMode: "contain", width: normalize(25), height: normalize(25) }} />
+                                        <Image source={require("../../assets/photograph.png")} style={{ resizeMode: "contain", width: normalize(25), height: normalize(25) }} />
                                     </TouchableOpacity>
                                     <Text style={{ fontSize: normalize(25), color: '#f8f3eb', fontWeight: "bold", width: "140%", bottom: normalize(30), textAlign: "center" }}>{this.state.name}</Text>
                                 </View>}
@@ -310,19 +310,19 @@ export default class Profile extends React.Component {
                                 <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
                                     <TouchableOpacity onPress={this.removePhoto}>
                                         <View style={styles.picBtn}>
-                                            <Image source={require("../assets/delete.png")} style={{ width: normalize(50), height: normalize(50), resizeMode: "contain" }} />
+                                            <Image source={require("../../assets/delete.png")} style={{ width: normalize(50), height: normalize(50), resizeMode: "contain" }} />
                                             <Text style={styles.picBtnText}>Remove{'\n'}photo</Text>
                                         </View>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={this.uploadPhoto}>
                                         <View style={styles.picBtn}>
-                                            <Image source={require("../assets/gallery.png")} style={{ width: normalize(50), height: normalize(50), resizeMode: "contain" }} />
+                                            <Image source={require("../../assets/gallery.png")} style={{ width: normalize(50), height: normalize(50), resizeMode: "contain" }} />
                                             <Text style={styles.picBtnText}>Gallery{'\n'}</Text>
                                         </View>
                                     </TouchableOpacity>
                                     <TouchableOpacity onPress={this.capturePhoto}>
                                         <View style={styles.picBtn}>
-                                            <Image source={require("../assets/camera.png")} style={{ width: normalize(50), height: normalize(50), resizeMode: "contain" }} />
+                                            <Image source={require("../../assets/camera.png")} style={{ width: normalize(50), height: normalize(50), resizeMode: "contain" }} />
                                             <Text style={styles.picBtnText}>Camera{'\n'}</Text>
                                         </View>
                                     </TouchableOpacity>
@@ -343,10 +343,10 @@ export default class Profile extends React.Component {
                                                 <Text style={styles.textInput}>{this.state.encMobile}</Text>
                                             </View>
                                             {this.state.mobileVerified ?
-                                                <Image source={require("../assets/verified.png")} style={{ left: normalize(70), width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
+                                                <Image source={require("../../assets/verified.png")} style={{ left: normalize(70), width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
                                                 : (
                                                     <TouchableOpacity onPress={this.goToVerification} style={{ left: normalize(70), }}>
-                                                        <Image source={require("../assets/notverified.png")} style={{ width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
+                                                        <Image source={require("../../assets/notverified.png")} style={{ width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
                                                     </TouchableOpacity>
                                                 )
                                             }
@@ -358,10 +358,10 @@ export default class Profile extends React.Component {
                                                 <Text style={styles.textInput}>{this.state.encEmail}</Text>
                                             </View>
                                             {this.state.emailVerified ?
-                                                <Image source={require("../assets/verified.png")} style={{ left: normalize(70), width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
+                                                <Image source={require("../../assets/verified.png")} style={{ left: normalize(70), width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
                                                 : (
                                                     <TouchableOpacity onPress={this.sendEmailVerify} style={{ left: normalize(70) }}>
-                                                        <Image source={require("../assets/notverified.png")} style={{ width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
+                                                        <Image source={require("../../assets/notverified.png")} style={{ width: normalize(30), height: normalize(30), resizeMode: "contain" }} />
                                                     </TouchableOpacity>
                                                 )
                                             }

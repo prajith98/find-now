@@ -1,10 +1,10 @@
 import React from 'react';
-import { BackHandler, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Dimensions, ActivityIndicator, ScrollView } from 'react-native';
-import { Feather, MaterialIcons, Ionicons } from '@expo/vector-icons'
+import { StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Dimensions, ActivityIndicator, ScrollView } from 'react-native';
+import { Ionicons } from '@expo/vector-icons'
 import { RFValue } from "react-native-responsive-fontsize";
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
-import { Table, TableWrapper, Row, Rows, Col } from 'react-native-table-component';
+import { Table, Row } from 'react-native-table-component';
 import { normalize } from 'react-native-elements';
 import paisa from 'paisa.js'
 export default class ScheduleScreen extends React.Component {
@@ -21,10 +21,10 @@ export default class ScheduleScreen extends React.Component {
         this.fetchData()
     }
     fetchData = () => {
-        var Loan = this.props.Loan;
-        var EMI = this.props.EMI;
-        var Tenure = this.props.Tenure;
-        var Rate = this.props.Rate;
+        var Loan = this.props.navigation.state.params.Loan;
+        var EMI = this.props.navigation.state.params.EMI;
+        var Tenure = this.props.navigation.state.params.Tenure;
+        var Rate = this.props.navigation.state.params.Rate;
         Rate = Rate / 1200
         var Data = [];
         var Total = [];
@@ -57,12 +57,8 @@ export default class ScheduleScreen extends React.Component {
         Total.push(paisa.formatWithSymbol(sumInt * 100, 0))
         Total.push(paisa.formatWithSymbol(sumPay * 100, 0))
         Total.push("")
-        this.setState({ totalPayment: paisa.formatWithSymbol((sumInt + sumPay) * 100,0) })
-        // Total.push(paisa.formatWithSymbol((sumInt + sumPay) * 100, 0))
+        this.setState({ totalPayment: paisa.formatWithSymbol((sumInt + sumPay) * 100, 0) })
         this.setState({ tableData: Data, totalData: Total })
-    }
-    backToPage = () => {
-        this.props.getBack(false);
     }
     render() {
         return (
@@ -71,7 +67,7 @@ export default class ScheduleScreen extends React.Component {
                     <View style={{ flexDirection: 'row', backgroundColor: "#e43f5a" }}>
                         <TouchableOpacity
                             style={{ alignItems: "flex-start", marginLeft: 16, marginTop: 30, width: "12%" }}
-                            onPress={this.backToPage}
+                            onPress={() => this.props.navigation.goBack()}
                         >
                             <Ionicons name="md-arrow-round-back" size={24} color="white" />
                         </TouchableOpacity>
@@ -101,7 +97,7 @@ export default class ScheduleScreen extends React.Component {
                                 <Table borderStyle={{ borderBottomWidth: 2, borderColor: 'white' }}>
                                     <Row data={this.state.totalData} flexArr={[0.5, 0.9, 0.9, 1]} style={styles.head} textStyle={styles.text1} />
                                 </Table>
-                                <Text style={[styles.head,styles.text1]}  >Total Payment: {this.state.totalPayment}</Text>
+                                <Text style={[styles.head, styles.text1]}  >Total Payment: {this.state.totalPayment}</Text>
                             </ScrollView>
                         ) :
                             (

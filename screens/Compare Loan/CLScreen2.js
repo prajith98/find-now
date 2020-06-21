@@ -9,8 +9,8 @@ import normalize from 'react-native-normalize';
 // import { RadioButton } from 'react-native-paper'
 import { Divider } from 'react-native-elements';
 import RadioForm, { RadioButtonInput, RadioButtonLabel, RadioButton } from 'react-native-simple-radio-button';
-import History from './History';
-import ScheduleScreen from './ScheduleScreen';
+import History from '../History';
+import ScheduleScreen from '../Calculator/ScheduleScreen';
 import { captureRef } from 'react-native-view-shot';
 import * as Sharing from 'expo-sharing';
 export default class CLScreen2 extends React.Component {
@@ -783,7 +783,7 @@ export default class CLScreen2 extends React.Component {
                                             <Divider />
                                         </View>
                                         <View style={styles.ansCombo}>
-                                            <Image source={require("../assets/interest.png")} style={[styles.col1, { resizeMode: "contain", width: normalize(20), height: normalize(20) }]} />
+                                            <Image source={require("../../assets/interest.png")} style={[styles.col1, { resizeMode: "contain", width: normalize(20), height: normalize(20) }]} />
                                             <Text style={styles.col2}>{this.state.InterestA}</Text>
                                             <Text style={styles.col2}>{this.state.InterestB}</Text>
                                         </View>

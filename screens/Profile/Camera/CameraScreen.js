@@ -5,7 +5,7 @@ import * as Permissions from 'expo-permissions';
 import { withNavigationFocus } from "react-navigation";
 import styles from './stylesCam';
 import Toolkit from './Toolkit';
-import Firebase, { db } from '../../database/firebase';
+import Firebase, { db } from '../../../database/firebase';
 
 class CameraScreen extends Component {
     constructor(props) {
