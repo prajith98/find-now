@@ -35,8 +35,9 @@ export default class Profile extends React.Component {
             editable: false,
             isLoading: true,
             radio_props: [
-                { label: 'Male          ', value: 0 },
-                { label: 'Female ', value: 1 }
+                { label: 'Male  ', value: 0 },
+                { label: 'Female  ', value: 1 },
+                { label: 'Transgender ', value: 2 }
             ],
             initial: 0,
             encMobile: "",
@@ -76,8 +77,10 @@ export default class Profile extends React.Component {
                         () => {
                             if (this.state.gender == "Male")
                                 this.setState({ initial: 0 })
-                            else
+                            else if(this.state.gender == "Female")
                                 this.setState({ initial: 1 })
+                            else if(this.state.gender == "Transgender")
+                            this.setState({ initial: 2 })
                             if (!this.state.emailVerified)
                                 if (Firebase.auth().currentUser.emailVerified) {
                                     const updateDBRef = db.collection('users').doc(Firebase.auth().currentUser.uid);
@@ -395,7 +398,6 @@ export default class Profile extends React.Component {
                                                 <Feather name="phone" size={24} />
                                                 <View>
                                                     <Text style={styles.textHeader}>Mobile Number</Text>
-                                                    {/* <TextInput keyboardType={"phone-pad"} style={styles.textInput} onChangeText={(val) => this.updateInputVal(val, 'newMobile')} value={this.state.newMobile} editable={this.state.editable}></TextInput> */}
                                                     <PhoneInput
                                                         initialCountry="in"
                                                         value={this.state.mobile}
@@ -426,7 +428,8 @@ export default class Profile extends React.Component {
                                                             formHorizontal={true}
                                                             onPress={(value) => {
                                                                 if (value == 0) this.setState({ gender: "Male" })
-                                                                else this.setState({ gender: "Female" })
+                                                                else if (value == 1) this.setState({ gender: "Female" })
+                                                                else this.setState({ gender: "Transgender" })
                                                             }}
                                                         />
                                                     </View>

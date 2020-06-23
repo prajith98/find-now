@@ -21,7 +21,7 @@ export default class MCCScreen extends React.Component {
             Tenure: "",
             EMI: "",
             TenureY: "",
-            loanPlaceHolder: "Balance Loan",
+            loanPlaceHolder: "Balance Loan before Moratorium Date",
             ratePlaceHolder: "Rate of Interest",
             tenurePlaceHolder: "Tenure",
             emiPlaceHolder: "Current EMI",
@@ -252,7 +252,6 @@ export default class MCCScreen extends React.Component {
             this.calculateEMI(this.state.Loan, this.state.Tenure, R)
         else if (this.state.a && this.state.d && !this.state.c)
             this.calculateLoan(this.state.EMI, this.state.Tenure, R)
-
     }
     tenureInputHandler = (enterdText) => {
         var T = enterdText
@@ -306,7 +305,7 @@ export default class MCCScreen extends React.Component {
             rateTextInputVisible: true,
             loanTextInputVisible: true,
             tenureTextInputVisible: true,
-            loanPlaceHolder: "Balance Loan",
+            loanPlaceHolder: "Balance Loan before Moratorium Date",
             ratePlaceHolder: "Rate of Interest",
             tenurePlaceHolder: "Tenure",
             emiPlaceHolder: "Current EMI",
@@ -316,7 +315,6 @@ export default class MCCScreen extends React.Component {
             d: false,
             historyMode: false
         })
-
     }
     calculateEMI = (Loan, Tenure, Rate) => {
         var R = parseFloat(Rate) / 12 / 100
@@ -531,7 +529,7 @@ export default class MCCScreen extends React.Component {
             if (value == 3)
                 this.setState({ tenurePlaceHolder: "Tenure" })
             if (value == 2)
-                this.setState({ loanPlaceHolder: "Balance Loan" })
+                this.setState({ loanPlaceHolder: "Balance Loan before Moratorium Date" })
             if (value == 1)
                 this.setState({ ratePlaceHolder: "Rate of Interest" })
             if (value == 0)
@@ -546,7 +544,7 @@ export default class MCCScreen extends React.Component {
                 if (this.state.calc == 1)
                     this.setState({ ratePlaceHolder: "Rate of Interest" })
                 else if (this.state.calc == 2)
-                    this.setState({ loanPlaceHolder: "Balance Loan" })
+                    this.setState({ loanPlaceHolder: "Balance Loan before Moratorium Date" })
                 else if (this.state.calc == 3)
                     this.setState({ tenurePlaceHolder: "Tenure" })
                 this.setState({ emiPlaceHolder: "Calculate ?", EMI: "", emiInWords: "", a: false })
@@ -559,7 +557,7 @@ export default class MCCScreen extends React.Component {
                 if (this.state.calc == 0)
                     this.setState({ emiPlaceHolder: "Current EMI" })
                 else if (this.state.calc == 2)
-                    this.setState({ loanPlaceHolder: "Balance Loan" })
+                    this.setState({ loanPlaceHolder: "Balance Loan before Moratorium Date" })
                 else if (this.state.calc == 3)
                     this.setState({ tenurePlaceHolder: "Tenure" })
                 this.setState({ ratePlaceHolder: "Calculate ?", Rate: "", b: false })
@@ -585,7 +583,7 @@ export default class MCCScreen extends React.Component {
                 if (this.state.calc == 1)
                     this.setState({ ratePlaceHolder: "Interest Rate" })
                 else if (this.state.calc == 2)
-                    this.setState({ loanPlaceHolder: "Balance Loan" })
+                    this.setState({ loanPlaceHolder: "Balance Loan before Moratorium Date" })
                 else if (this.state.calc == 0)
                     this.setState({ emiPlaceHolder: "Current EMI" })
                 this.setState({ tenurePlaceHolder: "Calculate ?", Tenure: "", d: false })
@@ -627,6 +625,13 @@ export default class MCCScreen extends React.Component {
                 this._afterModalClosed();
         });
     };
+    onFocusLoan = () => {
+        if(!this.state.c)
+            {
+                Alert.alert("","text")
+            }
+        this.setState({ c: true })
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -709,7 +714,7 @@ export default class MCCScreen extends React.Component {
                                     <View style={{ alignItems: "center", bottom: normalize(25) }}>
                                         <View style={styles.combo2}>
                                             <MaterialCommunityIcons name="sack" size={20} color="#FFA62F" style={{ top: "5%" }} />
-                                            <TextInput onTouchStart={() => this.setState({ c: true })} placeholder={this.state.loanPlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.loanInputHandler} value={this.state.Loan != "" ? (this.state.EMI != "Calculate ?" ? (paisa.format(Number(this.state.Loan) * 100, 0)) : "Calculate ?") : ""} editable={this.state.loanTextInputVisible}></TextInput>
+                                            <TextInput onTouchStart={this.onFocusLoan} placeholder={this.state.loanPlaceHolder} keyboardType={"numeric"} style={styles.textInput} onChangeText={this.loanInputHandler} value={this.state.Loan != "" ? (this.state.EMI != "Calculate ?" ? (paisa.format(Number(this.state.Loan) * 100, 0)) : "Calculate ?") : ""} editable={this.state.loanTextInputVisible}></TextInput>
                                         </View>
                                     </View>
                                     <Text style={{ fontSize: normalize(11), textAlign: "right", bottom: "60%", left: "13%", paddingTop: 3, width: "85%" }}>{this.state.loanInWords}</Text>

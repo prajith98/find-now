@@ -28,7 +28,7 @@
     },
     "android": {
       "package": "com.switchtosave.findnow",
-      "versionCode": 4,
+      "versionCode": 6,
       "config": {
         "googleSignIn": {
           "apiKey": "AIzaSyA_Vrm-kqCaSfrybO9QkHn-WUeniu_HCuU",
